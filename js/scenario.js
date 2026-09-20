@@ -115,3 +115,8 @@ etape("Allongement 7 et 11", (epingles) => {
 etape("Chemin (5, 17)", (epingles, chemins) => {
     ajouterCheminEntre(epingles, chemins, 5, 17);
 });
+
+//ÉTAPE 15 : Épingle 23
+etape("Épingle 23 (Rouge)", (epingles) => {
+    nouvelleEpingle(epingles, 23, 8, 1, 'rouge');
+});
