@@ -5,39 +5,47 @@
 function dessinerEpingle(ctx, epingle, etatGrille) {
     const echelle = etatGrille.echelle;
     
-    // Position du corps de l'épingle en pixels (coordonnées globales)
     const pixelX = epingle.x * echelle + etatGrille.decalageX;
     const pixelY = epingle.y * echelle + etatGrille.decalageY;
 
-    // --- 1. PARTIE ROTATIVE (Géométrie de l'épingle) ---
     ctx.save();
     
     ctx.translate(pixelX, pixelY);
     ctx.rotate((epingle.orientation * Math.PI) / 180);
 
-    // Définition des couleurs (Palette Violet)
-    const couleurCorps = '#8A2BE2';   // Violet normal
-    const couleurTete = '#4B0082';    // Violet foncé
-    const couleurQueue = '#BA55D3';   // Violet clair
+    // Définition des palettes selon le type de l'épingle
+    let couleurCorps, couleurTete, couleurQueue;
 
-    const taille = echelle; // Une unité de grille
+    if (epingle.couleurType === 'rouge') {
+        couleurCorps = '#FF4500';  // Rouge vif
+        couleurTete = '#8B0000';   // Rouge foncé
+        couleurQueue = '#FF7F50';  // Corail / rouge clair
+    } else if (epingle.couleurType === 'vert') {
+        couleurCorps = '#32CD32';  // Vert
+        couleurTete = '#006400';   // Vert foncé
+        couleurQueue = '#98FB98';  // Vert clair
+    } else {
+        // Violet par défaut (initiales 3 et 5)
+        couleurCorps = '#8A2BE2';  
+        couleurTete = '#4B0082';   
+        couleurQueue = '#BA55D3';  
+    }
 
-    // A. LA QUEUE (carré centralisé à -1 en X relatif)
+    const taille = echelle;
+
+    // A. LA QUEUE
     ctx.fillStyle = couleurQueue;
     ctx.fillRect(-1.5 * taille, -0.5 * taille, taille, taille);
 
-    // B. LES PETITS APPENDICES CARRÉS (centrés sur les intersections de grille à y = -1 et y = 1)
-    const tailleAppendice = taille * 0.3; // Petit carré d'ancrage
+    // B. LES PETITS APPENDICES CARRÉS (sur les intersections à y = -1 et y = 1)
+    const tailleAppendice = taille * 0.3;
     
-    // Appendice haut (intersection de grille à x = -1, y = -1)
     ctx.fillRect(
         -1.0 * taille - (tailleAppendice / 2), 
         -1.0 * taille - (tailleAppendice / 2), 
         tailleAppendice, 
         tailleAppendice
     );
-
-    // Appendice bas (intersection de grille à x = -1, y = 1)
     ctx.fillRect(
         -1.0 * taille - (tailleAppendice / 2), 
         1.0 * taille - (tailleAppendice / 2), 
@@ -45,7 +53,7 @@ function dessinerEpingle(ctx, epingle, etatGrille) {
         tailleAppendice
     );
 
-    // C. LE CORPS (carré central en 0,0)
+    // C. LE CORPS
     ctx.fillStyle = couleurCorps;
     ctx.fillRect(-0.5 * taille, -0.5 * taille, taille, taille);
     ctx.strokeStyle = '#FFFFFF';
@@ -59,9 +67,9 @@ function dessinerEpingle(ctx, epingle, etatGrille) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.restore(); // Fin de la rotation
+    ctx.restore();
 
-    // --- 2. AFFICHAGE DU TEXTE (En coordonnées globales, jamais inversé) ---
+    // AFFICHAGE DU TEXTE (toujours droit)
     if (echelle > 15) {
         ctx.fillStyle = '#FFFFFF';
         ctx.font = `${Math.max(10, echelle * 0.4)}px sans-serif`;

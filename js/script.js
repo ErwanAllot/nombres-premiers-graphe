@@ -2,16 +2,29 @@
 // SCRIPT.JS - CONTRÔLEUR PRINCIPAL
 // ==========================================
 
-// Données métiers du projet (Épingles initiales 3 et 5)
 let listeEpingles = [
-    creerEpingle(3, -2, 0),
-    creerEpingle(5, 2, 0)
+    creerEpingle(3, -2, 0, 'violet'),
+    creerEpingle(5, 2, 0, 'violet')
 ];
 
-// Calcul du premier chemin entre 3 et 5
-const premierChemin = calculerCheminEtJoint(listeEpingles[0], listeEpingles[1]);
+let listeChemins = [];
+let listeEpinglesCompletes = [...listeEpingles];
 
-// Note : Le point J (premierChemin.jointJ) servira de tête pour la future épingle 7 (Rouge).
+// ÉTAPE 1 : Premier chemin entre 3 et 5
+const premierChemin = calculerCheminEtJoint(listeEpingles[0], listeEpingles[1]);
+listeChemins.push(premierChemin);
+historiqueApp.enregistrerEtape("État initial (3 et 5) + Chemin vers J", listeEpinglesCompletes, listeChemins);
+
+// ÉTAPE 2 : Génération de l'épingle 7 (Rouge, car solution à -1)
+// J est la tête, donc le corps se positionne pour que la tête tombe exactement sur le point J.
+const corps7X = 0;
+const corps7Y = -2; // Position du corps pour que la tête soit sur J(0, -1) avec une orientation à 90°
+
+const epingle7 = creerEpingle(7, corps7X, corps7Y, 'rouge');
+listeEpinglesCompletes.push(epingle7);
+
+historiqueApp.enregistrerEtape("Génération de l'épingle 7 (Rouge)", listeEpinglesCompletes, listeChemins);
+
 
 // ==========================================
 // BOUCLE DE RENDU
@@ -23,11 +36,11 @@ function lancerBoucleRendu(ctx, canvas) {
         dessinerGrilleSecondaire(ctx, canvas, etatGrille);
         dessinerAxesPrincipaux(ctx, canvas, etatGrille);
 
-        // Dessiner le chemin (lignes jaune et bleue vers J)
-        dessinerChemin(ctx, premierChemin, etatGrille);
+        for (let chemin of listeChemins) {
+            dessinerChemin(ctx, chemin, etatGrille);
+        }
 
-        // Affichage des épingles de la liste
-        for (let epingle of listeEpingles) {
+        for (let epingle of listeEpinglesCompletes) {
             dessinerEpingle(ctx, epingle, etatGrille);
         }
         
@@ -37,13 +50,10 @@ function lancerBoucleRendu(ctx, canvas) {
 }
 
 // ==========================================
-// POINT D'ENTRÉE (TOUJOURS EN BAS)
+// POINT D'ENTRÉE
 // ==========================================
 
 window.addEventListener('DOMContentLoaded', () => {
-    // Initialisation du canvas et de la souris
     const references = initialiserCanvasEtInteractions();
-    
-    // Lancement de la boucle de rendu principale
     lancerBoucleRendu(references.ctx, references.canvas);
 });
