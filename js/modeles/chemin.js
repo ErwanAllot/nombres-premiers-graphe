@@ -10,24 +10,22 @@ function sbtenirAncresDisponibles(epingle) {
     const distanceTotal = 1 + longueurQueue;
     const orient = epingle.orientation !== undefined ? epingle.orientation : 0;
 
-    console.log("stop");
-    // Cas Horizontal (0° ou 180°)
+    // Cas Horizontal
     if (orient === 0 || orient === 180) {
         const dirX = (orient === 0) ? -1 : 1;
         const xAncre = epingle.x + (dirX * distanceTotal);
         return [
-            { x: xAncre, y: epingle.y + 1, id: 'haut' },
-            { x: xAncre, y: epingle.y - 1, id: 'bas' }
+            { x: xAncre, y: epingle.y + 1, cote: 'senestre' }, // par exemple
+            { x: xAncre, y: epingle.y - 1, cote: 'dextre' }    // par exemple
         ];
     } 
-    
-    // Cas Vertical (90° ou 270°)
+    // Cas Vertical
     else {
         const dirY = (orient === 90) ? -1 : 1;
         const yAncre = epingle.y + (dirY * distanceTotal);
         return [
-            { x: epingle.x - 1, y: yAncre, id: 'gauche' },
-            { x: epingle.x + 1, y: yAncre, id: 'droite' }
+            { x: epingle.x - 1, y: yAncre, cote: 'senestre' },
+            { x: epingle.x + 1, y: yAncre, cote: 'dextre' }
         ];
     }
 }
@@ -115,6 +113,14 @@ function calculerCheminEtJoint(parentPetit, parentGrand) {
     return {
         parentPetitId: parentPetit.valeur,
         parentGrandId: parentGrand.valeur,
+
+        // On fige l'état d'ancrage exact au moment de la création :
+        ancrePetitCote: p1.cote,
+        longueurQueuePetitOrigine: parentPetit.longueurQueue,
+        
+        ancreGrandCote: p2.cote,
+        longueurQueueGrandOrigine: parentGrand.longueurQueue,
+
         departPetit: p1,
         departGrand: p2,
         pointPivotQ: pointQ,
