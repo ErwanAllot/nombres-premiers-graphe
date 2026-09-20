@@ -1,18 +1,3 @@
-// ==========================================
-// MODULE MODÈLE : ÉPINGLE & GÉOMÉTRIE
-// ==========================================
-
-function calculerOrientation(x, y) {
-    const absX = Math.abs(x);
-    const absY = Math.abs(y);
-
-    if (absX > absY) {
-        return x < 0 ? 0 : 180;
-    } else {
-        return y < 0 ? 90 : 270;
-    }
-}
-
 /**
  * Crée un objet représentant une épingle complète.
  * @param {number} valeur - Le nombre premier (ex: 3, 5, 7)
@@ -31,4 +16,19 @@ function creerEpingle(valeur, x, y, couleurType = 'violet', longueurQueue = 1) {
         couleurType: couleurType,
         longueurQueue: longueurQueue // Permet de gérer l'extension de la queue
     };
+}
+
+// ==========================================
+// MODULE MODÈLE : ÉPINGLE & GÉOMÉTRIE
+// ==========================================
+
+function calculerOrientation(x, y) {
+    const absX = Math.abs(x);
+    const absY = Math.abs(y);
+
+    if (absX > absY) {
+        return x < 0 ? 0 : 180;
+    } else {
+        return y < 0 ? 90 : 270;
+    }
 }

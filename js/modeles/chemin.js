@@ -3,40 +3,39 @@
 // ==========================================
 
 /**
- * Calcule le Joint J et les données du chemin entre deux épingles parentes.
- * @param {Object} parentPetit - L'épingle du plus petit parent (ex: 3)
- * @param {Object} parentGrand - L'épingle du plus grand parent (ex: 5)
- * @returns {Object} Les coordonnées des points de départ, d'arrivée (J) et les métadonnées
+ * Calcule les ancres disponibles au bout de la queue de l'épingle (horizontal ou vertical).
  */
-// ==========================================
-// MODULE GÉOMÉTRIQUE : CHEMIN ORTHOGONAL & JOINT J
-// ==========================================
+function sbtenirAncresDisponibles(epingle) {
+    const longueurQueue = epingle.longueurQueue || 1;
+    const distanceTotal = 1 + longueurQueue;
+    const orient = epingle.orientation !== undefined ? epingle.orientation : 0;
 
-function obtenirAncresDisponibles(epingle) {
-    const distanceDuCorps = epingle.longueurQueue || 1;
-    const direction = epingle.x <= 0 ? -1 : 1; 
-    const xAncre = epingle.x + (direction * distanceDuCorps);
-
-    return [
-        { x: xAncre, y: epingle.y + 1, id: 'haut' },
-        { x: xAncre, y: epingle.y - 1, id: 'bas' }
-    ];
+    console.log("stop");
+    // Cas Horizontal (0° ou 180°)
+    if (orient === 0 || orient === 180) {
+        const dirX = (orient === 0) ? -1 : 1;
+        const xAncre = epingle.x + (dirX * distanceTotal);
+        return [
+            { x: xAncre, y: epingle.y + 1, id: 'haut' },
+            { x: xAncre, y: epingle.y - 1, id: 'bas' }
+        ];
+    } 
+    
+    // Cas Vertical (90° ou 270°)
+    else {
+        const dirY = (orient === 90) ? -1 : 1;
+        const yAncre = epingle.y + (dirY * distanceTotal);
+        return [
+            { x: epingle.x - 1, y: yAncre, id: 'gauche' },
+            { x: epingle.x + 1, y: yAncre, id: 'droite' }
+        ];
+    }
 }
 
-function calculerCheminEtJoint(parentPetit, parentGrand) {
-    // 1. Récupération des ancres disponibles
-console.log("=== CALCUL DE CHEMIN ===");
-    console.log("Parent 1 (valeur):", parentPetit.valeur, "aux coordonnées:", { x: parentPetit.x, y: parentPetit.y }, "avec queue:", parentPetit.longueurQueue);
-    console.log("Parent 2 (valeur):", parentGrand.valeur, "aux coordonnées:", { x: parentGrand.x, y: parentGrand.y }, "avec queue:", parentGrand.longueurQueue);
-
-    // 1. Récupération des ancres disponibles
-    const ancresPetit = obtenirAncresDisponibles(parentPetit);
-    const ancresGrand = obtenirAncresDisponibles(parentGrand);
-
-    console.log("Ancres du parent", parentPetit.valeur, ":", ancresPetit);
-    console.log("Ancres du parent", parentGrand.valeur, ":", ancresGrand);
-
-    // 2. Sélection de la paire la plus proche (Distance de Manhattan)
+/**
+ * Trouve la paire d'ancres la plus proche entre deux épingles (Distance de Manhattan).
+ */
+function trouverMeilleurePaireAncres(ancresPetit, ancresGrand) {
     let meilleurePaire = null;
     let distanceMinimale = Infinity;
 
@@ -49,41 +48,35 @@ console.log("=== CALCUL DE CHEMIN ===");
             }
         }
     }
+    return meilleurePaire;
+}
 
-    const p1 = meilleurePaire.pPetit; // x1, y1
-    const p2 = meilleurePaire.pGrand; // x2, y2
-
-    // 3. Application de la règle pour le point pivot Q du chemin orthogonal
-    let xq, yq;
-
-    // Si les deux ancres sont sur le même axe (même X ou même Y)
+/**
+ * Calcule le point pivot Q du chemin orthogonal en "L".
+ */
+function calculerPointPivotQ(p1, p2) {
     if (p1.x === p2.x || p1.y === p2.y) {
         const midX = (p1.x + p2.x) / 2;
         const midY = (p1.y + p2.y) / 2;
-
-        // Arrondi en direction de p1 si on tombe sur un .5
-        xq = (p1.x < p2.x) ? Math.floor(midX) : Math.ceil(midX);
-        yq = (p1.y < p2.y) ? Math.floor(midY) : Math.ceil(midY);
-
+        return {
+            x: (p1.x < p2.x) ? Math.floor(midX) : Math.ceil(midX),
+            y: (p1.y < p2.y) ? Math.floor(midY) : Math.ceil(midY)
+        };
     } else {
-
         const q1 = { x: p1.x, y: p2.y };
-        const q2 = { x: p2.x, y:p1.y }; // ou l'inverse selon ton test
+        const q2 = { x: p2.x, y: p1.y };
 
         const distQ1 = (q1.x * q1.x) + (q1.y * q1.y);
         const distQ2 = (q2.x * q2.x) + (q2.y * q2.y);
 
-        if (distQ1 > distQ2) {
-            xq = q1.x; yq = q1.y;
-        } else {
-            xq = q2.x; yq = q2.y;
-        }
+        return (distQ1 > distQ2) ? q1 : q2;
     }
-    
-    const pointQ = { x: xq, y: yq };
+}
 
-    // 4. Définition des segments orthogonaux (L : de p1 -> Q -> p2)
-    // On évite les segments nuls si p1 ou p2 est déjà sur le pivot Q
+/**
+ * Génère les segments du chemin (évite les segments nuls).
+ */
+function creerSegments(p1, p2, pointQ) {
     const segments = [];
     if (p1.x !== pointQ.x || p1.y !== pointQ.y) {
         segments.push({ debut: p1, fin: pointQ, couleur: 'jaune' });
@@ -91,12 +84,33 @@ console.log("=== CALCUL DE CHEMIN ===");
     if (pointQ.x !== p2.x || pointQ.y !== p2.y) {
         segments.push({ debut: pointQ, fin: p2, couleur: 'bleu' });
     }
+    return segments;
+}
 
-    // 5. Calcul du Joint J (par exemple au milieu du chemin global ou sur le pivot)
-    // Ici, on le place au milieu exact entre p1 et p2 pour l'instant, ou sur Q selon ton design
-    const jX = (p1.x + p2.x) / 2;
-    const jY = (p1.y + p2.y) / 2;
-    const pointJ = { x: jX, y: jY };
+/**
+ * Fonction principale : Calcule le Joint J et les données du chemin entre deux épingles parentes.
+ */
+function calculerCheminEtJoint(parentPetit, parentGrand) {
+    // 1. Récupération des ancres
+    const ancresPetit = sbtenirAncresDisponibles(parentPetit);
+    const ancresGrand = sbtenirAncresDisponibles(parentGrand);
+
+    // 2. Sélection de la paire la plus proche
+    const meilleurePaire = trouverMeilleurePaireAncres(ancresPetit, ancresGrand);
+    const p1 = meilleurePaire.pPetit; 
+    const p2 = meilleurePaire.pGrand; 
+
+    // 3. Calcul du pivot Q
+    const pointQ = calculerPointPivotQ(p1, p2);
+
+    // 4. Définition des segments
+    const segments = creerSegments(p1, p2, pointQ);
+
+    // 5. Calcul du Joint J (milieu exact entre p1 et p2)
+    const pointJ = {
+        x: (p1.x + p2.x) / 2,
+        y: (p1.y + p2.y) / 2
+    };
 
     return {
         parentPetitId: parentPetit.valeur,

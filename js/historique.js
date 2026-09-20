@@ -58,6 +58,26 @@ window.historiqueApp = {
         return null;
     },
 
+    // --- NOUVEAUTÉS POUR DÉBUT ET FIN ---
+    allerAuDebut() {
+        if (this.etapes.length > 0 && this.indexActuel > 0) {
+            this.indexActuel = 0;
+            console.log(`[Historique] Retour au début : ${this.etapes[this.indexActuel].description}`);
+            return this.etapes[this.indexActuel];
+        }
+        return null;
+    },
+
+    allerALaFin() {
+        if (this.etapes.length > 0 && this.indexActuel < this.etapes.length - 1) {
+            this.indexActuel = this.etapes.length - 1;
+            console.log(`[Historique] Saut à la fin : ${this.etapes[this.indexActuel].description}`);
+            return this.etapes[this.indexActuel];
+        }
+        return null;
+    },
+    // -------------------------------------
+
     obtenirEtatActuel() {
         if (this.indexActuel >= 0 && this.indexActuel < this.etapes.length) {
             return this.etapes[this.indexActuel];

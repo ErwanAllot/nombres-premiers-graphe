@@ -23,8 +23,8 @@ const nouvelleEpingle = (epingles, val, x, y, couleur = 'rouge') => {
 
 // --- ÉTAT INITIAL ---
 let listeEpinglesInitiales = [
-    creerEpingle(3, -2, 0, 'violet'),
-    creerEpingle(5, 2, 0, 'violet')
+    creerEpingle(3, -1, 0, 'violet'),
+    creerEpingle(5, 1, 0, 'violet')
 ];
 
 // ÉTAPE 1 : État de départ pur
@@ -37,7 +37,7 @@ etape("Tracé du premier chemin vers J", (epingles, chemins) => {
 
 // ÉTAPE 3 : Épingle 7
 etape("Génération de l'épingle 7 (Rouge)", (epingles) => {
-    nouvelleEpingle(epingles, 7, 0, 2, 'rouge');
+    nouvelleEpingle(epingles, 7, 0, 1, 'rouge');
 });
 
 // ÉTAPE 4 : Allongement 3 et 5
@@ -52,7 +52,7 @@ etape("Test unique du chemin (3, 7)", (epingles, chemins) => {
 
 // ÉTAPE 6 : Épingle 11
 etape("Génération de l'épingle 11 (Rouge)", (epingles) => {
-    nouvelleEpingle(epingles, 11, -5, 3, 'rouge');
+    nouvelleEpingle(epingles, 11, -4, 3, 'rouge');
 });
 
 // ÉTAPE 7 : Allongement 3 et 7
@@ -67,7 +67,7 @@ etape("Test unique du chemin (5, 7)", (epingles, chemins) => {
 
 // ÉTAPE 9 : Épingle 13
 etape("Génération de l'épingle 13 (Rouge)", (epingles) => {
-    nouvelleEpingle(epingles, 13, 4, 5, 'rouge');
+    nouvelleEpingle(epingles, 13, 4, 4, 'rouge');
 });
 
 // ÉTAPE 10 : Allongement 5 et 7
@@ -84,7 +84,7 @@ etape("Test unique du Chemin (5, 13)", (epingles, chemins) => {
 
 //ÉTAPE 12 : Épingle 17
 etape("Génération de l'épingle 17 (Rouge)", (epingles) => {
-    nouvelleEpingle(epingles, 17, 6, 3, 'rouge');
+    nouvelleEpingle(epingles, 17, 5, 3, 'rouge');
 });
 
 // ÉTAPE 10 : Allongement 5 et 13
@@ -101,7 +101,7 @@ etape("Chemin (7, 11)", (epingles, chemins) => {
 
 //ÉTAPE 12 : Épingle 19
 etape("Épingle 19 (Rouge)", (epingles) => {
-    nouvelleEpingle(epingles, 19, -6, 6, 'rouge');
+    nouvelleEpingle(epingles, 19, -6, 5, 'rouge');
 });
 
 // ÉTAPE 13 : Allongement 7 et 11
@@ -118,5 +118,5 @@ etape("Chemin (5, 17)", (epingles, chemins) => {
 
 //ÉTAPE 15 : Épingle 23
 etape("Épingle 23 (Rouge)", (epingles) => {
-    nouvelleEpingle(epingles, 23, 8, 1, 'rouge');
+    nouvelleEpingle(epingles, 23, 7, 1, 'rouge');
 });
