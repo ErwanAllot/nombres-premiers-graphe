@@ -31,14 +31,54 @@ let listeEpinglesInitiales = [
 window.historiqueApp.enregistrerEtape("État de départ (3 et 5)", [...listeEpinglesInitiales], []);
 
 // ÉTAPE 2 : Premier chemin
-etape("Tracé du premier chemin vers J", (epingles, chemins) => {
+etape("Tracé du premier chemin vers J", (epingles, chemins, options) => {
     ajouterCheminEntre(epingles, chemins, 3, 5);
+    options.nombrePremier = 7;
 });
+
+
+
 
 // ÉTAPE 3 : Épingle 7
 etape("Génération de l'épingle 7 (Rouge)", (epingles) => {
-    nouvelleEpingle(epingles, 7, 0, 1, 'rouge');
+    const etatPrecedent = window.historiqueApp.obtenirEtatActuel();
+
+    let x = 0; // Valeurs par défaut de secours si l'historique est vide
+    let y = 0;
+    let idPetit = 0;
+    let idGrand = 0;
+
+    if (etatPrecedent && etatPrecedent.chemins.length > 0) {
+        const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
+        
+        // On met à jour nos variables globales à l'étape
+        x = dernierChemin.pointPivotQ.x;
+        y = dernierChemin.pointPivotQ.y;
+        
+        console.log("Coordonnées de Q récupérées :", x, y);
+
+        idPetit = dernierChemin.parentPetitId;
+        idGrand = dernierChemin.parentGrandId;
+        console.log("Parents du chemin :", idPetit, idGrand);
+    }
+
+    let color = '';
+    valPremier = etatPrecedent.nombrePremier;
+
+    polarite = idGrand + idPetit - valPremier;
+
+    if (polarite == - 1){color = 'vert'}
+    else{color = 'rouge'}
+
+    // Maintenant x et y sont bien accessibles ici !
+    nouvelleEpingle(epingles, valPremier , x, y, color);
 });
+
+
+// ÉTAPE 3 : Épingle 7
+// etape("Génération de l'épingle 7 (Rouge)", (epingles) => {
+//     nouvelleEpingle(epingles, 7, 0, 1, 'rouge');
+// });
 
 // ÉTAPE 4 : Allongement 3 et 5
 etape("Allongement des queues de 3 et 5", (epingles) => {
@@ -128,91 +168,61 @@ etape("Allongement 5 et 17", (epingles) => {
 
 
 
+// ======================EN ATTENTE===============================___________________________________________
 
 // const insererLigne = (epingles, indexLigne) => {
+//     console.log("-> Appel de insererLigne sur index :", indexLigne); // <--- Ajoute ça
+//     const cible = Number(indexLigne);
 //     epingles.forEach(p => {
-//         if (p.y >= indexLigne) {
-//             p.y += 1; // On décale les épingles situées en dessous
+//         const currentY = Number(p.y);
+//         // Utilise '>=' si tu veux que l'épingle sur la ligne descende, 
+//         // ou '>' si tu veux qu'elle reste fixe.
+//         if (currentY >= cible) {
+//             p.y = currentY + 1; // Forcé en nombre, fini la concaténation foireuse !
 //         }
 //     });
 // };
 
 
-const insererLigne = (epingles, indexLigne) => {
-    console.log("-> Appel de insererLigne sur index :", indexLigne); // <--- Ajoute ça
-    const cible = Number(indexLigne);
-    epingles.forEach(p => {
-        const currentY = Number(p.y);
-        // Utilise '>=' si tu veux que l'épingle sur la ligne descende, 
-        // ou '>' si tu veux qu'elle reste fixe.
-        if (currentY >= cible) {
-            p.y = currentY + 1; // Forcé en nombre, fini la concaténation foireuse !
-        }
-    });
-};
 
-
-
-etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
-    // 1. On décale les épingles
-    console.log("1. Épingles avant insertion :", JSON.stringify(epingles));
-    
-    insererLigne(epingles, -10);
-    
-    console.log("2. Épingles après insertion :", JSON.stringify(epingles));
-    
-    // 2. On recalcule les chemins
-chemins.forEach((c, index) => {
-        console.log(`Chemin [${index}] brut :`, c);
-        
-        const pPetit = ep(epingles, c.parentPetitId);
-        const pGrand = ep(epingles, c.parentGrandId);
-
-        console.log(`-> Trouvé pPetit (${c.parentPetitId}) :`, pPetit);
-        console.log(`-> Trouvé pGrand (${c.parentGrandId}) :`, pGrand);
-
-        if (!pPetit || !pGrand) {
-            console.warn(`⚠️ ALerte : Chemin [${index}] abandonné car parents introuvables !`);
-            return;
-        }
-
-
-        const nouveauChemin = calculerCheminEtJoint(pPetit, pGrand);
-
-        console.log(`Ancien chemin [${index}] segments :`, c.segments);
-        console.log(`Nouveau chemin [${index}] segments :`, nouveauChemin.segments);
-        
-        c.departPetit = nouveauChemin.departPetit;
-        c.departGrand = nouveauChemin.departGrand;
-        c.pointPivotQ = nouveauChemin.pointPivotQ;
-        c.jointJ = nouveauChemin.jointJ;
-        c.segments = nouveauChemin.segments;
-    });
-
-    // 3. ON ACTIVE LE RENDU VISUEL DE LA LIGNE
-    options.ligneInseree = -10;
-});
-
-
-
-
-
-// etape("Insertion d'une ligne en y=2", (epingles, chemins) => {
+// etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
 //     // 1. On décale les épingles
-//     insererLigne(epingles, 2);
+//     console.log("1. Épingles avant insertion :", JSON.stringify(epingles));
     
-//     // 2. IMPORTANT : On recalcule TOUS les chemins existants 
-//     // pour qu'ils se reposent sur les nouvelles positions des épingles
-//     chemins.forEach(c => {
+//     insererLigne(epingles, -10);
+    
+//     console.log("2. Épingles après insertion :", JSON.stringify(epingles));
+    
+//     // 2. On recalcule les chemins
+//     chemins.forEach((c, index) => {
+//         console.log(`Chemin [${index}] brut :`, c);
+        
 //         const pPetit = ep(epingles, c.parentPetitId);
 //         const pGrand = ep(epingles, c.parentGrandId);
+
+//         console.log(`-> Trouvé pPetit (${c.parentPetitId}) :`, pPetit);
+//         console.log(`-> Trouvé pGrand (${c.parentGrandId}) :`, pGrand);
+
+//         if (!pPetit || !pGrand) {
+//             console.warn(`⚠️ ALerte : Chemin [${index}] abandonné car parents introuvables !`);
+//             return;
+//         }
+
+
 //         const nouveauChemin = calculerCheminEtJoint(pPetit, pGrand);
+
+//         console.log(`Ancien chemin [${index}] segments :`, c.segments);
+//         console.log(`Nouveau chemin [${index}] segments :`, nouveauChemin.segments);
         
-//         // On met à jour les données du chemin dans le tableau
 //         c.departPetit = nouveauChemin.departPetit;
 //         c.departGrand = nouveauChemin.departGrand;
 //         c.pointPivotQ = nouveauChemin.pointPivotQ;
 //         c.jointJ = nouveauChemin.jointJ;
 //         c.segments = nouveauChemin.segments;
 //     });
+
+//     // 3. ON ACTIVE LE RENDU VISUEL DE LA LIGNE
+//     options.ligneInseree = -10;
 // });
+
+// ======================EN ATTENTE===============================---------------------------------------------------------

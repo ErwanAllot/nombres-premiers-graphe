@@ -31,7 +31,8 @@ window.historiqueApp = {
             epingles: JSON.parse(JSON.stringify(epingles)),
             chemins: JSON.parse(JSON.stringify(chemins)),
             ligneInseree: options.ligneInseree,       // <--- On sauvegarde
-            colonneInseree: options.colonneInseree   // <--- On sauvegarde
+            colonneInseree: options.colonneInseree,   // <--- On sauvegarde
+            nombrePremier: options.nombrePremier
         };
 
         if (this.indexActuel < this.etapes.length - 1) {
