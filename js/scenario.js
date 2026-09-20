@@ -287,7 +287,7 @@ etape("Allongement 7 et 11", (epingles) => {
 // });
 
 etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
-    const indexCible = 2;
+    const indexCible = 1;
 
     // 1. On décale les épingles (en gardant celles sur la ligne fixes si tu utilises strict '>')
     insererLigne(epingles, indexCible);
