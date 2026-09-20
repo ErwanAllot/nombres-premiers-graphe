@@ -78,7 +78,7 @@ etape("Test unique du chemin (5, 7)", (epingles, chemins) => {
 
 // ÉTAPE 9 : Génération de l'épingle 13
 etape("Génération de l'épingle 13 (Rouge)", (epingles) => {
-    epingles.push(creerEpingle(13, 4, 4, 'rouge'));
+    epingles.push(creerEpingle(13, 4, 5, 'rouge'));
 });
 
 // ÉTAPE 10 : Allongement des queues de 5 et 7
