@@ -67,8 +67,40 @@ console.log("=== CALCUL DE CHEMIN ===");
 
     } else {
         // Règle classique des valeurs absolues pour les cas croisés
-        xq = Math.abs(p1.x) > Math.abs(p2.x) ? p1.x : p2.x;
-        yq = Math.abs(p1.y) > Math.abs(p2.y) ? p1.y : p2.y;
+        // xq = Math.abs(p1.x) > Math.abs(p2.x) ? p1.x : p2.x;
+        // yq = Math.abs(p1.y) > Math.abs(p2.y) ? p1.y : p2.y;
+
+        // Règle croisée : on prend le X de p1 et le Y de p2 (ou l'inverse selon le sens voulu)
+        // xq = p1.x;
+        // yq = p2.y;
+
+        // Règle croisée : on prend le X de p2 et le Y de p1 pour placer Q à (7, 1)
+        // xq = p2.x;
+        // yq = p1.y;
+
+        // Règle des cas croisés basée sur l'expansion maximale (plus grande aire / distance au centre)
+        const q1 = { x: p1.x, y: p2.y };
+        const q2 = { x: p2.x, y:p1.y }; // ou l'inverse selon ton test
+
+        // // On calcule par exemple la distance au centre (0,0) ou l'aire rectangulaire engendrée
+        // const aire1 = Math.abs(q1.x * q1.y);
+        // const aire2 = Math.abs(q2.x * q2.y);
+
+        // if (aire1 > aire2) {
+        //     xq = q1.x;
+        //     yq = q1.y;
+        // } else {
+        //     xq = q2.x;
+        //     yq = q1.y; // Attention à bien garder le bon appariement x/y du coin choisi
+        // }
+        const distQ1 = (q1.x * q1.x) + (q1.y * q1.y);
+        const distQ2 = (q2.x * q2.x) + (q2.y * q2.y);
+
+        if (distQ1 > distQ2) {
+            xq = q1.x; yq = q1.y;
+        } else {
+            xq = q2.x; yq = q2.y;
+        }
     }
     
     const pointQ = { x: xq, y: yq };

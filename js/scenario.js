@@ -104,7 +104,14 @@ etape("Épingle 19 (Rouge)", (epingles) => {
     nouvelleEpingle(epingles, 19, -6, 6, 'rouge');
 });
 
-// ÉTAPE 10 : Allongement 7 et 11
+// ÉTAPE 13 : Allongement 7 et 11
 etape("Allongement 7 et 11", (epingles) => {
     allongerQueues(epingles, 7, 11);
+});
+
+
+
+// ÉTAPE 14 : Chemin (5, 17)
+etape("Chemin (5, 17)", (epingles, chemins) => {
+    ajouterCheminEntre(epingles, chemins, 5, 17);
 });
