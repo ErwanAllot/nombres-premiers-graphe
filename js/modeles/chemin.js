@@ -58,8 +58,13 @@ console.log("=== CALCUL DE CHEMIN ===");
 
     // Si les deux ancres sont sur le même axe (même X ou même Y)
     if (p1.x === p2.x || p1.y === p2.y) {
-        xq = (p1.x + p2.x) / 2;
-        yq = (p1.y + p2.y) / 2;
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+
+        // Arrondi en direction de p1 si on tombe sur un .5
+        xq = (p1.x < p2.x) ? Math.floor(midX) : Math.ceil(midX);
+        yq = (p1.y < p2.y) ? Math.floor(midY) : Math.ceil(midY);
+
     } else {
         // Règle classique des valeurs absolues pour les cas croisés
         xq = Math.abs(p1.x) > Math.abs(p2.x) ? p1.x : p2.x;

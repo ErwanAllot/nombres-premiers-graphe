@@ -36,7 +36,7 @@ function centrerOrigineInitial() {
 
 function convertirPixelsVersGrille(pixelX, pixelY, etat) {
     const x = (pixelX - etat.decalageX) / etat.echelle;
-    const y = (etat.decalageY - pixelY) / etat.echelle; // Inversé si ton axe Y monte vers le haut
+    const y = (pixelY - etat.decalageY) / etat.echelle; // Direct (le bas devient positif)
     return { x, y };
 }
 
