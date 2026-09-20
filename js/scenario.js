@@ -74,3 +74,21 @@ etape("Génération de l'épingle 13 (Rouge)", (epingles) => {
 etape("Allongement des queues de 5 et 7", (epingles) => {
     allongerQueues(epingles, 5, 7);
 });
+
+
+
+// ÉTAPE 11 : Chemin (5, 13)
+etape("Test unique du Chemin (5, 13)", (epingles, chemins) => {
+    ajouterCheminEntre(epingles, chemins, 5, 13);
+});
+
+//ÉTAPE 12 : Épingle 18
+// etape("Génération de l'épingle 18 (Rouge)", (epingles) => {
+//     nouvelleEpingle(epingles, 18, 6, 4, 'rouge');
+// });
+
+// ÉTAPE 10 : Allongement 5 et 13
+// etape("Allongement des queues de 5 et 13", (epingles) => {
+//     allongerQueues(epingles, 5, 13);
+// });
+

@@ -34,6 +34,14 @@ function centrerOrigineInitial() {
     etatGrille.decalageY = canvas.height / 2;
 }
 
+function convertirPixelsVersGrille(pixelX, pixelY, etat) {
+    const x = (pixelX - etat.decalageX) / etat.echelle;
+    const y = (etat.decalageY - pixelY) / etat.echelle; // Inversé si ton axe Y monte vers le haut
+    return { x, y };
+}
+
+
+
 function configurerEcouteursEvenements() {
     window.addEventListener('resize', redimensionnerCanvas);
 
@@ -46,20 +54,39 @@ function configurerEcouteursEvenements() {
     });
 
     window.addEventListener('mousemove', (e) => {
-        if (!etatGrille.estEnTrainDeGlisser) return;
-        
-        const deltaX = e.clientX - etatGrille.derniereSourisX;
-        const deltaY = e.clientY - etatGrille.derniereSourisY;
+        // Gestion du déplacement (pan) si on clique-glisse
+        if (etatGrille.estEnTrainDeGlisser) {
+            const deltaX = e.clientX - etatGrille.derniereSourisX;
+            const deltaY = e.clientY - etatGrille.derniereSourisY;
 
-        etatGrille.decalageX += deltaX;
-        etatGrille.decalageY += deltaY;
+            etatGrille.decalageX += deltaX;
+            etatGrille.decalageY += deltaY;
 
-        etatGrille.derniereSourisX = e.clientX;
-        etatGrille.derniereSourisY = e.clientY;
+            etatGrille.derniereSourisX = e.clientX;
+            etatGrille.derniereSourisY = e.clientY;
+        }
+
+        // --- MISE À JOUR DES COORDONNÉES DE LA SOURIS ---
+        const divCoord = document.getElementById('coord-souris');
+        if (divCoord) {
+            const rect = canvas.getBoundingClientRect();
+            const pixelX = e.clientX - rect.left;
+            const pixelY = e.clientY - rect.top;
+
+            const coordsLogiques = convertirPixelsVersGrille(pixelX, pixelY, etatGrille);
+            divCoord.textContent = `X: ${coordsLogiques.x.toFixed(1)} | Y: ${coordsLogiques.y.toFixed(1)}`;
+        }
     });
 
     window.addEventListener('mouseup', () => {
         etatGrille.estEnTrainDeGlisser = false;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        const divCoord = document.getElementById('coord-souris');
+        if (divCoord) {
+            divCoord.textContent = `X: - | Y: -`;
+        }
     });
 
     canvas.addEventListener('wheel', (e) => {
@@ -84,3 +111,6 @@ function configurerEcouteursEvenements() {
         etatGrille.decalageY = sourisY - (sourisY - etatGrille.decalageY) * (etatGrille.echelle / ancienneEchelle);
     }, { passive: false });
 }
+
+
+
