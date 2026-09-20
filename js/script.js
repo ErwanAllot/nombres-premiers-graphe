@@ -4,8 +4,8 @@
 
 // Données métiers du projet
 let listeEpingles = [
-    creerEpingle(3, 0, 0, 0),
-    creerEpingle(5, 3, 2, 0)
+    creerEpingle(3, -2, 0), // Corps en (-2;0) -> orientation calculée automatiquement à 0°
+    creerEpingle(5, 2, 0)   // Corps en (2;0)  -> orientation calculée automatiquement à 180°
 ];
 
 // ==========================================

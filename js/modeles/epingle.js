@@ -1,27 +1,35 @@
 // ==========================================
-// MODULE ÉPINGLE : GÉOMÉTRIE & STRUCTURE
+// MODULE MODÈLE : ÉPINGLE & GÉOMÉTRIE
 // ==========================================
 
 /**
- * Crée un objet représentant une épingle sur la grille.
- * @param {number} valeur - Le nombre premier associé
- * @param {number} x - Coordonnée logique X
- * @param {number} y - Coordonnée logique Y
- * @param {number} orientation - Angle ou orientation de l'épingle
+ * Calcule l'orientation de l'épingle en degrés (0, 90, 180, 270) 
+ * selon les règles de position x et y.
  */
-function creerEpingle(valeur, x, y, orientation = 0) {
-    return {
-        valeur: valeur,
-        x: x,
-        y: y,
-        orientation: orientation
-    };
+function calculerOrientation(x, y) {
+    const absX = Math.abs(x);
+    const absY = Math.abs(y);
+
+    if (absX > absY) {
+        return x < 0 ? 0 : 180;
+    } else {
+        return y < 0 ? 90 : 270;
+    }
 }
 
 /**
- * Convertit des coordonnées logiques (mathématiques) en coordonnées pixel sur le canvas,
- * en prenant en compte le zoom (échelle) et le déplacement (décalage).
+ * Crée un objet représentant une épingle complète.
+ * @param {number} valeur - Le nombre premier (ex: 3, 5)
+ * @param {number} x - Coordonnée logique X du corps
+ * @param {number} y - Coordonnée logique Y du corps
  */
-function logiqueVersPixel(coordonneeLogique, echelle, decalage) {
-    return coordonneeLogique * echelle + decalage;
+function creerEpingle(valeur, x, y) {
+    const orientation = calculerOrientation(x, y);
+
+    return {
+        valeur: valeur,
+        x: x, // Position logique du corps
+        y: y,
+        orientation: orientation // en degrés (0, 90, 180, 270)
+    };
 }
