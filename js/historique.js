@@ -1,4 +1,21 @@
 // ==========================================
+// ASSISTANT DE SCÉNARIO (Générique)
+// ==========================================
+function etape(nom, callback) {
+    // 1. Récupération et clonage propre de l'état actuel
+    let etat = window.historiqueApp.obtenirEtatActuel();
+    let epingles = JSON.parse(JSON.stringify(etat.epingles));
+    let chemins = JSON.parse(JSON.stringify(etat.chemins));
+
+    // 2. On exécute les modifications spécifiques à l'étape via une fonction fléchée
+    callback(epingles, chemins);
+
+    // 3. Enregistrement automatique dans l'historique
+    window.historiqueApp.enregistrerEtape(nom, epingles, chemins);
+}
+
+
+// ==========================================
 // MODULE HISTORIQUE & NAVIGATION D'ÉTAPES
 // ==========================================
 
