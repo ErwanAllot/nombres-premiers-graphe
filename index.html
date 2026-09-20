@@ -28,13 +28,27 @@
     </div>
 
     <!-- Chargement séquentiel des modules (ordre des dépendances strict) -->
-    <script src="js/premiers.js"></script>
-    <script src="js/chemins.js"></script>
-    <script src="js/epingle.js"></script>
+<!-- 1. Les modèles de données (structures brutes) -->
+    <script src="js/modeles/epingle.js"></script>
+    <script src="js/modeles/chemin.js"></script>
+
+    <!-- 2. Les mathématiques et la logique pure -->
+    <script src="js/mathematiques/premiers.js"></script>
+    <script src="js/mathematiques/geometrie.js"></script>
+
+    <!-- 3. Le rendu graphique (utilise les modèles et les mathématiques) -->
+    <script src="js/rendu/grille.js"></script>
+    <script src="js/rendu/epingle.js"></script>
+    <script src="js/rendu/chemin.js"></script>
+
+    <!-- 4. Les interactions (souris, UI, etc.) -->
+    <script src="js/interactions/souris.js"></script>
+    <script src="js/interactions/ui.js"></script>
+
+    <!-- 5. Les outils transverses -->
     <script src="js/historique.js"></script>
-    <script src="js/generation.js"></script>
-    <script src="js/rendu.js"></script>
-    <script src="js/interactions.js"></script>
+
+    <!-- 6. Le script principal / chef d'orchestre (toujours en dernier) -->
     <script src="js/script.js"></script>
 </body>
 </html>

@@ -8,15 +8,6 @@ let listeEpingles = [
     creerEpingle(5, 3, 2, 0)
 ];
 
-// Lancement au chargement de la page
-window.addEventListener('DOMContentLoaded', () => {
-    // Initialisation du canvas et de la souris (fourni par interactions.js)
-    const references = initialiserCanvasEtInteractions();
-    
-    // Lancement de la boucle de rendu principale
-    lancerBoucleRendu(references.ctx, references.canvas);
-});
-
 // ==========================================
 // BOUCLE DE RENDU
 // ==========================================
@@ -36,3 +27,15 @@ function lancerBoucleRendu(ctx, canvas) {
     }
     requestAnimationFrame(rafraichir);
 }
+
+// ==========================================
+// POINT D'ENTRÉE (TOUJOURS EN BAS)
+// ==========================================
+
+window.addEventListener('DOMContentLoaded', () => {
+    // Initialisation du canvas et de la souris
+    const references = initialiserCanvasEtInteractions();
+    
+    // Lancement de la boucle de rendu principale
+    lancerBoucleRendu(references.ctx, references.canvas);
+});
