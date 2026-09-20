@@ -5,6 +5,22 @@ const ajouterCheminEntre = (epingles, chemins, v1, v2) => {
     chemins.push(calculerCheminEtJoint(ep(epingles, v1), ep(epingles, v2)));
 };
 
+
+const rallongerDeuxQueues = (epingles) => {
+    const etatPrecedent = window.historiqueApp.obtenirEtatActuel();
+    if (!etatPrecedent) return;
+
+    let idPetit = 0;
+    let idGrand = 0;
+
+    if (etatPrecedent.chemins && etatPrecedent.chemins.length > 0) {
+        const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
+        idPetit = dernierChemin.parentPetitId;
+        idGrand = dernierChemin.parentGrandId;
+    }
+
+    allongerQueues(epingles, idPetit, idGrand);
+};
 const allongerQueues = (epingles, ...valeurs) => {
     valeurs.forEach(v => {
         const p = ep(epingles, v);
@@ -12,9 +28,35 @@ const allongerQueues = (epingles, ...valeurs) => {
     });
 };
 
+
+
+const genererEpingleSuivante = (epingles) => {
+    const etatPrecedent = window.historiqueApp.obtenirEtatActuel();
+    if (!etatPrecedent) return;
+
+    let x = 0;
+    let y = 0;
+    let idPetit = 0;
+    let idGrand = 0;
+
+    if (etatPrecedent.chemins && etatPrecedent.chemins.length > 0) {
+        const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
+        x = dernierChemin.pointPivotQ.x;
+        y = dernierChemin.pointPivotQ.y;
+        idPetit = dernierChemin.parentPetitId;
+        idGrand = dernierChemin.parentGrandId;
+    }
+
+    const valPremier = etatPrecedent.nombrePremier;
+    const polarite = idGrand + idPetit - valPremier;
+    const color = (polarite === -1) ? 'vert' : 'rouge';
+
+    nouvelleEpingle(epingles, valPremier, x, y, color);
+};
 const nouvelleEpingle = (epingles, val, x, y, couleur = 'rouge') => {
     epingles.push(creerEpingle(val, x, y, couleur));
 };
+
 
 
 // ==========================================
@@ -40,50 +82,17 @@ etape("Tracé du premier chemin vers J", (epingles, chemins, options) => {
 
 
 // ÉTAPE 3 : Épingle 7
-etape("Génération de l'épingle 7 (Rouge)", (epingles) => {
-    const etatPrecedent = window.historiqueApp.obtenirEtatActuel();
-
-    let x = 0; // Valeurs par défaut de secours si l'historique est vide
-    let y = 0;
-    let idPetit = 0;
-    let idGrand = 0;
-
-    if (etatPrecedent && etatPrecedent.chemins.length > 0) {
-        const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
-        
-        // On met à jour nos variables globales à l'étape
-        x = dernierChemin.pointPivotQ.x;
-        y = dernierChemin.pointPivotQ.y;
-        
-        console.log("Coordonnées de Q récupérées :", x, y);
-
-        idPetit = dernierChemin.parentPetitId;
-        idGrand = dernierChemin.parentGrandId;
-        console.log("Parents du chemin :", idPetit, idGrand);
-    }
-
-    let color = '';
-    valPremier = etatPrecedent.nombrePremier;
-
-    polarite = idGrand + idPetit - valPremier;
-
-    if (polarite == - 1){color = 'vert'}
-    else{color = 'rouge'}
-
-    // Maintenant x et y sont bien accessibles ici !
-    nouvelleEpingle(epingles, valPremier , x, y, color);
+etape("Génération de l'épingle 7", (epingles) => {
+    genererEpingleSuivante(epingles);
 });
-
-
-// ÉTAPE 3 : Épingle 7
-// etape("Génération de l'épingle 7 (Rouge)", (epingles) => {
-//     nouvelleEpingle(epingles, 7, 0, 1, 'rouge');
-// });
 
 // ÉTAPE 4 : Allongement 3 et 5
 etape("Allongement des queues de 3 et 5", (epingles) => {
-    allongerQueues(epingles, 3, 5);
+    rallongerDeuxQueues(epingles);
 });
+
+
+
 
 // ÉTAPE 5 : Chemin (3, 7)
 etape("Test unique du chemin (3, 7)", (epingles, chemins) => {
