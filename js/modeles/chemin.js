@@ -9,32 +9,40 @@
  * @returns {Object} Les coordonnées des points de départ, d'arrivée (J) et les métadonnées
  */
 function calculerCheminEtJoint(parentPetit, parentGrand) {
-    // Coordonnées de l'appendice inférieur/supérieur de la queue du parent petit (ex: x = -3, y = -1)
-    // Dans notre disposition, la queue est à x - 1 par rapport au corps.
-    // Pour 3 (corps en -2,0), la queue est à -3. Ses appendices sont à y = -1 et y = 1.
-    const xQueuePetit = parentPetit.x - 1;
-    const yAppendicePetit = parentPetit.y - 1; // On choisit l'appendice haut ou bas (-1)
+    // 1. On récupère dynamiquement les vraies ancres de chaque parent 
+    // en tenant compte de leur longueur de queue respective !
+    const ancresPetit = obtenirAncresDisponibles(parentPetit);
+    const ancresGrand = obtenirAncresDisponibles(parentGrand);
 
-    const xQueueGrand = parentGrand.x + 1; // Pour 5 (corps en 2,0 orienté 180°), la queue est à x = 3.
-    const yAppendiceGrand = parentGrand.y - 1;
+    // 2. On teste toutes les combinaisons pour trouver la plus proche (distance de Manhattan)
+    let meilleurePaire = null;
+    let distanceMin = Infinity;
 
-    const departPetit = { x: xQueuePetit, y: yAppendicePetit };
-    const departGrand = { x: xQueueGrand, y: yAppendiceGrand };
+    for (let ap of ancresPetit) {
+        for (let ag of ancresGrand) {
+            const dist = Math.abs(ap.x - ag.x) + Math.abs(ap.y - ag.y);
+            if (dist < distanceMin) {
+                distanceMin = dist;
+                meilleurePaire = { pPetit: ap, pGrand: ag };
+            }
+        }
+    }
 
-    // Calcul du milieu (Joint J)
-    const longueurX = Math.abs(departGrand.x - departPetit.x);
-    
-    // Milieu exact (ou pondéré si impair vers le plus petit parent)
-    const jX = (departPetit.x + departGrand.x) / 2;
-    const jY = (departPetit.y + departGrand.y) / 2;
-
+    // 3. On calcule le Joint J au milieu de cette paire optimale
+    const jX = (meilleurePaire.pPetit.x + meilleurePaire.pGrand.x) / 2;
+    const jY = (meilleurePaire.pPetit.y + meilleurePaire.pGrand.y) / 2;
     const pointJ = { x: jX, y: jY };
 
+    // 4. On retourne les segments orthogonaux
+    const segments = [
+        { debut: meilleurePaire.pPetit, fin: pointJ, couleur: 'jaune' },
+        { debut: pointJ, fin: meilleurePaire.pGrand, couleur: 'bleu' }
+    ];
+
     return {
-        parentPetitId: parentPetit.valeur,
-        parentGrandId: parentGrand.valeur,
-        departPetit: departPetit,
-        departGrand: departGrand,
-        jointJ: pointJ
+        departPetit: meilleurePaire.pPetit,
+        departGrand: meilleurePaire.pGrand,
+        jointJ: pointJ,
+        segments: segments
     };
 }

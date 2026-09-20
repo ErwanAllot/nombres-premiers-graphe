@@ -19,16 +19,28 @@ listeCheminsInitiaux.push(premierChemin);
 window.historiqueApp.enregistrerEtape("Tracé du premier chemin vers J", [...listeEpinglesInitiales], [...listeCheminsInitiaux]);
 
 // ÉTAPE 2 : Génération de l'épingle 7
-const epingle7 = creerEpingle(7, 0, -2, 'rouge');
+const epingle7 = creerEpingle(7, 0, 2, 'rouge');
 listeEpinglesCompletes.push(epingle7);
 window.historiqueApp.enregistrerEtape("Génération de l'épingle 7 (Rouge)", [...listeEpinglesCompletes], [...listeCheminsInitiaux]);
 
-// Pour l'étape 3, on modifie directement la longueur de queue des parents 3 et 5
-let epinglesEtape3 = JSON.parse(JSON.stringify(listeEpinglesCompletes));
-epinglesEtape3[0].longueurQueue = 2; // La queue de 3 passe à 2 niveaux
-epinglesEtape3[1].longueurQueue = 2; // La queue de 5 passe à 2 niveaux
 
-window.historiqueApp.enregistrerEtape("Rallongement de la queue de 3 et 5 (Niveau 2)", epinglesEtape3, listeCheminsInitiaux);
+// 1. On récupère l'état actuel de l'application (les épingles et les chemins)
+let etatActuel = window.historiqueApp.obtenirEtatActuel();
+let epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
+let cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
+
+// 2. On cherche les épingles 3 et 5 dans ce tableau pour rallonger leur queue
+const epingle3 = epinglesEtape.find(e => e.valeur === 3);
+const epingle5 = epinglesEtape.find(e => e.valeur === 5);
+
+if (epingle3) epingle3.longueurQueue += 1; // Passe à 2
+if (epingle5) epingle5.longueurQueue += 1; // Passe à 2
+
+// 3. On enregistre cette étape d'allongement dans l'historique
+window.historiqueApp.enregistrerEtape("Allongement des queues de 3 et 5", epinglesEtape, cheminsEtape);
+
+
+
 
 
 // ==========================================

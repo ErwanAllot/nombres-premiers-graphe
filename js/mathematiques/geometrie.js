@@ -20,3 +20,22 @@ function etendreQueueParent(parent, directionX = -1) {
 
     return elementsAjoutes;
 }
+
+
+function obtenirAncresDisponibles(epingle) {
+    // Si longueurQueue = 1, l'ancre est à 1 unité du corps.
+    // Si longueurQueue = 2, l'ancre recule d'1 unité supplémentaire, etc.
+    const distanceDuCorps = epingle.longueurQueue;
+    
+    // On gère le sens selon que l'épingle est à gauche (X négatif) ou à droite (X positif)
+    const direction = epingle.x <= 0 ? -1 : 1; 
+
+    // Position X de l'appendice au bout de la queue
+    const xAncre = epingle.x + (direction * distanceDuCorps);
+
+    return [
+        { x: xAncre, y: epingle.y + 1 }, // Ancre du haut
+        { x: xAncre, y: epingle.y - 1 }  // Ancre du bas
+    ];
+}
+
