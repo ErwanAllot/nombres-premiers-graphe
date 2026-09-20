@@ -1,160 +1,93 @@
 // ==========================================
-// SCRIPT.JS - CONTRÔLEUR PRINCIPAL
+// ASSISTANT DE SCÉNARIO (Générique)
+// ==========================================
+function etape(nom, callback) {
+    // 1. Récupération et clonage propre de l'état actuel
+    let etat = window.historiqueApp.obtenirEtatActuel();
+    let epingles = JSON.parse(JSON.stringify(etat.epingles));
+    let chemins = JSON.parse(JSON.stringify(etat.chemins));
+
+    // 2. On exécute les modifications spécifiques à l'étape via une fonction fléchée
+    callback(epingles, chemins);
+
+    // 3. Enregistrement automatique dans l'historique
+    window.historiqueApp.enregistrerEtape(nom, epingles, chemins);
+}
+
+
+// ==========================================
+// SCRIPT.JS - CONTRÔLEUR PRINCIPAL (Version Propre)
 // ==========================================
 
+// --- INITIALISATION DU SCÉNARIO ---
 let listeEpinglesInitiales = [
     creerEpingle(3, -2, 0, 'violet'),
     creerEpingle(5, 2, 0, 'violet')
 ];
 
-let listeCheminsInitiaux = [];
-let listeEpinglesCompletes = [...listeEpinglesInitiales];
-
-// ÉTAPE 1 : État de départ pur (uniquement les épingles 3 et 5)
+// ÉTAPE 1 : État de départ pur
 window.historiqueApp.enregistrerEtape("État de départ (3 et 5)", [...listeEpinglesInitiales], []);
 
 // ÉTAPE 2 : Premier chemin entre 3 et 5
-const premierChemin = calculerCheminEtJoint(listeEpinglesInitiales[0], listeEpinglesInitiales[1]);
-listeCheminsInitiaux.push(premierChemin);
-window.historiqueApp.enregistrerEtape("Tracé du premier chemin vers J", [...listeEpinglesInitiales], [...listeCheminsInitiaux]);
+etape("Tracé du premier chemin vers J", (epingles, chemins) => {
+    const p3 = epingles.find(e => e.valeur === 3);
+    const p5 = epingles.find(e => e.valeur === 5);
+    chemins.push(calculerCheminEtJoint(p3, p5));
+});
 
 // ÉTAPE 3 : Génération de l'épingle 7
-const epingle7 = creerEpingle(7, 0, 2, 'rouge');
-listeEpinglesCompletes.push(epingle7);
-window.historiqueApp.enregistrerEtape("Génération de l'épingle 7 (Rouge)", [...listeEpinglesCompletes], [...listeCheminsInitiaux]);
+etape("Génération de l'épingle 7 (Rouge)", (epingles) => {
+    epingles.push(creerEpingle(7, 0, 2, 'rouge'));
+});
 
+// ÉTAPE 4 : Allongement des queues de 3 et 5
+etape("Allongement des queues de 3 et 5", (epingles) => {
+    epingles.find(e => e.valeur === 3).longueurQueue += 1;
+    // const p3 = epingles.find(e => e.valeur === 3);
+    const p5 = epingles.find(e => e.valeur === 5);
+    // if (p3) p3.longueurQueue += 1;
+    if (p5) p5.longueurQueue += 1;
+});
 
-// ÉTAPE 4
+// ÉTAPE 5 : Création du chemin (3, 7)
+etape("Test unique du chemin (3, 7)", (epingles, chemins) => {
+    const p3 = epingles.find(e => e.valeur === 3);
+    const p7 = epingles.find(e => e.valeur === 7);
+    chemins.push(calculerCheminEtJoint(p3, p7));
+});
 
-// 1. On récupère l'état actuel de l'application (les épingles et les chemins)
-let etatActuel = window.historiqueApp.obtenirEtatActuel();
-let epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
-let cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
+// ÉTAPE 6 : Génération de l'épingle 11
+etape("Génération de l'épingle 11 (Rouge)", (epingles) => {
+    epingles.push(creerEpingle(11, -5, 3, 'rouge'));
+});
 
-// 2. On cherche les épingles 3 et 5 dans ce tableau pour rallonger leur queue
-const epingle3 = epinglesEtape.find(e => e.valeur === 3);
-const epingle5 = epinglesEtape.find(e => e.valeur === 5);
-
-if (epingle3) epingle3.longueurQueue += 1; // Passe à 2
-if (epingle5) epingle5.longueurQueue += 1; // Passe à 2
-
-// 3. On enregistre cette étape d'allongement dans l'historique
-window.historiqueApp.enregistrerEtape("Allongement des queues de 3 et 5", epinglesEtape, cheminsEtape);
-
-
-// ÉTAPE 5
-
-// ==========================================
-// ÉTAPE : Création du chemin (3, 7) et de l'épingle 11
-// ==========================================
-
-// On réutilise les variables existantes sans les redéclarer avec 'let'
-etatActuel = window.historiqueApp.obtenirEtatActuel();
-epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
-cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
-
-if (epingle3 && epingle7) {
-    // 2. On calcule le chemin et le joint J via notre moteur d'ancres
-    const resultatChemin = calculerCheminEtJoint(epingle3, epingle7);
-    
-    // 3. On l'ajoute aux chemins SANS toucher aux épingles (pas de création de 11)
-    cheminsEtape.push(resultatChemin);
-
-    // 4. On enregistre l'étape juste pour voir le rendu du chemin
-    window.historiqueApp.enregistrerEtape("Test unique du chemin (3, 7)", epinglesEtape, cheminsEtape);
-}
-
-
-// ÉTApe 6 : Génération de l'épingle 11
-
-// On ajoute l'épingle 11
-const epingle11 = creerEpingle(11, -5, 3, 'rouge');
-epinglesEtape.push(epingle11);
-
-// On enregistre en conservant TOUS les chemins précédents
-window.historiqueApp.enregistrerEtape("Génération de l'épingle 11 (Rouge)", epinglesEtape, cheminsEtape);
-
-
-
-
-// ==========================================
 // ÉTAPE 7 : Allongement des queues de 3 et 7
-// ==========================================
+etape("Allongement des queues de 3 et 7", (epingles) => {
+    const p3 = epingles.find(e => e.valeur === 3);
+    const p7 = epingles.find(e => e.valeur === 7);
+    if (p3) p3.longueurQueue += 1;
+    if (p7) p7.longueurQueue += 1;
+});
 
-// On récupère l'état actuel pour cette étape
-etatActuel = window.historiqueApp.obtenirEtatActuel();
-epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
-cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
-
-// On cherche les épingles dans CETTE étape avec des noms uniques
-const epingle3Actuelle = epinglesEtape.find(e => e.valeur === 3);
-const epingle7Actuelle = epinglesEtape.find(e => e.valeur === 7);
-
-if (epingle3Actuelle) epingle3Actuelle.longueurQueue += 1; 
-if (epingle7Actuelle) epingle7Actuelle.longueurQueue += 1; 
-
-// On enregistre proprement
-window.historiqueApp.enregistrerEtape("Allongement des queues de 3 et 7", epinglesEtape, cheminsEtape);
-
-
-
-
-
-// ==========================================
 // ÉTAPE 8 : Création du chemin (5, 7)
-// ==========================================
+etape("Test unique du chemin (5, 7)", (epingles, chemins) => {
+    const p5 = epingles.find(e => e.valeur === 5);
+    const p7 = epingles.find(e => e.valeur === 7);
+    chemins.push(calculerCheminEtJoint(p5, p7));
+});
 
-etatActuel = window.historiqueApp.obtenirEtatActuel();
-epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
-cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
+// ÉTAPE 9 : Génération de l'épingle 13
+etape("Génération de l'épingle 13 (Rouge)", (epingles) => {
+    epingles.push(creerEpingle(13, 4, 4, 'rouge'));
+});
 
-// On va chercher les versions fraîches de cette étape (avec les queues allongées)
-const epingle5Actuelle = epinglesEtape.find(e => e.valeur === 5);
-const epingle7Actu = epinglesEtape.find(e => e.valeur === 7);
-
-if (epingle5Actuelle && epingle7Actu) {
-    // On calcule avec les bonnes épingles à jour
-    const resultatChemin = calculerCheminEtJoint(epingle5Actuelle, epingle7Actu);
-    
-    cheminsEtape.push(resultatChemin);
-
-    window.historiqueApp.enregistrerEtape("Test unique du chemin (5, 7)", epinglesEtape, cheminsEtape);
-}
-
-
-// ÉTApe 9 : Génération de l'épingle 13
-
-// On ajoute l'épingle 13
-const epingle13 = creerEpingle(13, 4, 4, 'rouge');
-epinglesEtape.push(epingle13);
-
-// On enregistre en conservant TOUS les chemins précédents
-window.historiqueApp.enregistrerEtape("Génération de l'épingle 13 (Rouge)", epinglesEtape, cheminsEtape);
-
-
-
-
-// ==========================================
 // ÉTAPE 10 : Allongement des queues de 5 et 7
-// ==========================================
-
-// On récupère l'état actuel pour cette étape
-etatActuel = window.historiqueApp.obtenirEtatActuel();
-epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
-cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
-
-// On cherche les épingles dans CETTE étape avec des noms uniques
-const epingle5t = epinglesEtape.find(e => e.valeur === 5);
-const epingle7t = epinglesEtape.find(e => e.valeur === 7);
-
-if (epingle5t) epingle5t.longueurQueue += 1; 
-if (epingle7t) epingle7t.longueurQueue += 1; 
-
-// On enregistre proprement
-window.historiqueApp.enregistrerEtape("Allongement des queues de 5 et 7", epinglesEtape, cheminsEtape);
-
-
-
+etape("Allongement des queues de 5 et 7", (epingles) => {
+    const p5 = epingles.find(e => e.valeur === 5);
+    const p7 = epingles.find(e => e.valeur === 7);
+    if (p5) p5.longueurQueue += 1;
+    if (p7) p7.longueurQueue += 1;
+});
 
 
 
@@ -249,4 +182,3 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-console.log("Liste des chemins :", chemins);
