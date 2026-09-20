@@ -2,16 +2,18 @@
 // ASSISTANT DE SCÉNARIO (Générique)
 // ==========================================
 function etape(nom, callback) {
-    // 1. Récupération et clonage propre de l'état actuel
     let etat = window.historiqueApp.obtenirEtatActuel();
-    let epingles = JSON.parse(JSON.stringify(etat.epingles));
-    let chemins = JSON.parse(JSON.stringify(etat.chemins));
+    let epingles = etat ? JSON.parse(JSON.stringify(etat.epingles)) : [];
+    let chemins = etat ? JSON.parse(JSON.stringify(etat.chemins)) : [];
 
-    // 2. On exécute les modifications spécifiques à l'étape via une fonction fléchée
-    callback(epingles, chemins);
+    // On crée un objet "contexte" ou "meta" pour stocker les options graphiques de l'étape
+    let optionsEtape = {};
 
-    // 3. Enregistrement automatique dans l'historique
-    window.historiqueApp.enregistrerEtape(nom, epingles, chemins);
+    // On exécute le callback en lui passant aussi l'objet options
+    callback(epingles, chemins, optionsEtape);
+
+    // On enregistre en passant les options
+    window.historiqueApp.enregistrerEtape(nom, epingles, chemins, optionsEtape);
 }
 
 
@@ -23,11 +25,13 @@ window.historiqueApp = {
     etapes: [],
     indexActuel: -1,
 
-    enregistrerEtape(description, epingles, chemins) {
+    enregistrerEtape(description, epingles, chemins, options = {}) {
         const etatSnapshot = {
             description: description,
             epingles: JSON.parse(JSON.stringify(epingles)),
-            chemins: JSON.parse(JSON.stringify(chemins))
+            chemins: JSON.parse(JSON.stringify(chemins)),
+            ligneInseree: options.ligneInseree,       // <--- On sauvegarde
+            colonneInseree: options.colonneInseree   // <--- On sauvegarde
         };
 
         if (this.indexActuel < this.etapes.length - 1) {

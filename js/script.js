@@ -28,19 +28,31 @@ function naviguerHistorique(direction) {
 function lancerBoucleRendu(ctx, canvas) {
     function rafraichir() {
         effacerCanvas(ctx, canvas);
-        dessinerGrilleSecondaire(ctx, canvas, etatGrille);
-        dessinerAxesPrincipaux(ctx, canvas, etatGrille);
 
         // Récupération de l'état actif depuis l'historique global
         const etatActuel = window.historiqueApp.obtenirEtatActuel();
 
+        // 1. FOND : Afficher la ligne/colonne insérée de l'étape (si elle existe)
         if (etatActuel) {
-            // Dessiner les chemins de l'étape active
+            if (etatActuel.ligneInseree !== undefined) {
+                dessinerLigneInseree(ctx, canvas, etatGrille, etatActuel.ligneInseree);
+            }
+            if (etatActuel.colonneInseree !== undefined) {
+                dessinerColonneInseree(ctx, canvas, etatGrille, etatActuel.colonneInseree);
+            }
+        }
+
+        // 2. Grille et axes par-dessus le fond coloré
+        dessinerGrilleSecondaire(ctx, canvas, etatGrille);
+        dessinerAxesPrincipaux(ctx, canvas, etatGrille);
+
+        if (etatActuel) {
+            // 3. Dessiner les chemins de l'étape active
             for (let chemin of etatActuel.chemins) {
                 dessinerChemin(ctx, chemin, etatGrille);
             }
 
-            // Dessiner les épingles de l'étape active
+            // 4. Dessiner les épingles de l'étape active (tout en haut)
             for (let epingle of etatActuel.epingles) {
                 dessinerEpingle(ctx, epingle, etatGrille);
             }

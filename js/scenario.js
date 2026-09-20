@@ -120,3 +120,64 @@ etape("Chemin (5, 17)", (epingles, chemins) => {
 etape("Épingle 23 (Rouge)", (epingles) => {
     nouvelleEpingle(epingles, 23, 7, 1, 'rouge');
 });
+
+//ÉTAPE 16 : Allongement 5 et 17
+etape("Allongement 5 et 17", (epingles) => {
+    allongerQueues(epingles, 5, 17);
+});
+
+
+
+
+const insererLigne = (epingles, indexLigne) => {
+    epingles.forEach(p => {
+        if (p.y >= indexLigne) {
+            p.y += 1; // On décale les épingles situées en dessous
+        }
+    });
+};
+
+
+
+etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
+    // 1. On décale les épingles
+    insererLigne(epingles, 2);
+    
+    // 2. On recalcule les chemins
+    chemins.forEach(c => {
+        const pPetit = ep(epingles, c.parentPetitId);
+        const pGrand = ep(epingles, c.parentGrandId);
+        const nouveauChemin = calculerCheminEtJoint(pPetit, pGrand);
+        
+        c.departPetit = nouveauChemin.departPetit;
+        c.departGrand = nouveauChemin.departGrand;
+        c.pointPivotQ = nouveauChemin.pointPivotQ;
+        c.jointJ = nouveauChemin.jointJ;
+        c.segments = nouveauChemin.segments;
+    });
+
+    // 3. ON ACTIVE LE RENDU VISUEL DE LA LIGNE
+    options.ligneInseree = 2;
+});
+
+
+
+// etape("Insertion d'une ligne en y=2", (epingles, chemins) => {
+//     // 1. On décale les épingles
+//     insererLigne(epingles, 2);
+    
+//     // 2. IMPORTANT : On recalcule TOUS les chemins existants 
+//     // pour qu'ils se reposent sur les nouvelles positions des épingles
+//     chemins.forEach(c => {
+//         const pPetit = ep(epingles, c.parentPetitId);
+//         const pGrand = ep(epingles, c.parentGrandId);
+//         const nouveauChemin = calculerCheminEtJoint(pPetit, pGrand);
+        
+//         // On met à jour les données du chemin dans le tableau
+//         c.departPetit = nouveauChemin.departPetit;
+//         c.departGrand = nouveauChemin.departGrand;
+//         c.pointPivotQ = nouveauChemin.pointPivotQ;
+//         c.jointJ = nouveauChemin.jointJ;
+//         c.segments = nouveauChemin.segments;
+//     });
+// });
