@@ -23,6 +23,13 @@ const epingle7 = creerEpingle(7, 0, -2, 'rouge');
 listeEpinglesCompletes.push(epingle7);
 window.historiqueApp.enregistrerEtape("Génération de l'épingle 7 (Rouge)", [...listeEpinglesCompletes], [...listeCheminsInitiaux]);
 
+// Pour l'étape 3, on modifie directement la longueur de queue des parents 3 et 5
+let epinglesEtape3 = JSON.parse(JSON.stringify(listeEpinglesCompletes));
+epinglesEtape3[0].longueurQueue = 2; // La queue de 3 passe à 2 niveaux
+epinglesEtape3[1].longueurQueue = 2; // La queue de 5 passe à 2 niveaux
+
+window.historiqueApp.enregistrerEtape("Rallongement de la queue de 3 et 5 (Niveau 2)", epinglesEtape3, listeCheminsInitiaux);
+
 
 // ==========================================
 // GESTION DE L'INTERFACE ET DE L'HISTORIQUE

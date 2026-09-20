@@ -20,14 +20,15 @@ function calculerOrientation(x, y) {
  * @param {number} y - Coordonnée logique Y du corps
  * @param {string} couleurType - 'violet', 'rouge' ou 'vert'
  */
-function creerEpingle(valeur, x, y, couleurType = 'violet') {
+function creerEpingle(valeur, x, y, couleurType = 'violet', longueurQueue = 1) {
     const orientation = calculerOrientation(x, y);
 
     return {
         valeur: valeur,
-        x: x, // Position logique du corps
+        x: x,
         y: y,
-        orientation: orientation, // en degrés (0, 90, 180, 270)
-        couleurType: couleurType
+        orientation: orientation,
+        couleurType: couleurType,
+        longueurQueue: longueurQueue // Permet de gérer l'extension de la queue
     };
 }

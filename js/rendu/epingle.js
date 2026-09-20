@@ -1,7 +1,3 @@
-// ==========================================
-// MODULE RENDU : DESSIN DES ÉPINGLES
-// ==========================================
-
 function dessinerEpingle(ctx, epingle, etatGrille) {
     const echelle = etatGrille.echelle;
     
@@ -13,41 +9,44 @@ function dessinerEpingle(ctx, epingle, etatGrille) {
     ctx.translate(pixelX, pixelY);
     ctx.rotate((epingle.orientation * Math.PI) / 180);
 
-    // Définition des palettes selon le type de l'épingle
     let couleurCorps, couleurTete, couleurQueue;
 
     if (epingle.couleurType === 'rouge') {
-        couleurCorps = '#FF4500';  // Rouge vif
-        couleurTete = '#8B0000';   // Rouge foncé
-        couleurQueue = '#FF7F50';  // Corail / rouge clair
+        couleurCorps = '#FF4500';  
+        couleurTete = '#8B0000';   
+        couleurQueue = '#FF7F50';  
     } else if (epingle.couleurType === 'vert') {
-        couleurCorps = '#32CD32';  // Vert
-        couleurTete = '#006400';   // Vert foncé
-        couleurQueue = '#98FB98';  // Vert clair
+        couleurCorps = '#32CD32';  
+        couleurTete = '#006400';   
+        couleurQueue = '#98FB98';  
     } else {
-        // Violet par défaut (initiales 3 et 5)
         couleurCorps = '#8A2BE2';  
         couleurTete = '#4B0082';   
         couleurQueue = '#BA55D3';  
     }
 
     const taille = echelle;
+    const nbQueue = epingle.longueurQueue || 1; // 1 par défaut
 
-    // A. LA QUEUE
+    // A. LA QUEUE EXTENSIBLE (boucle selon le nombre de segments de queue)
     ctx.fillStyle = couleurQueue;
-    ctx.fillRect(-1.5 * taille, -0.5 * taille, taille, taille);
+    for (let i = 0; i < nbQueue; i++) {
+        // Chaque segment s'allonge d'une unité supplémentaire vers la gauche (ex: -1.5, -2.5, etc.)
+        ctx.fillRect((-1.5 - i) * taille, -0.5 * taille, taille, taille);
+    }
 
-    // B. LES PETITS APPENDICES CARRÉS (sur les intersections à y = -1 et y = 1)
+    // B. LES PETITS APPENDICES CARRÉS (placés tout au bout de la queue, au dernier niveau)
     const tailleAppendice = taille * 0.3;
-    
+    const extremiteQueueX = (-1.0 - (nbQueue - 1)) * taille; // Position X du bout de la queue
+
     ctx.fillRect(
-        -1.0 * taille - (tailleAppendice / 2), 
+        extremiteQueueX - (tailleAppendice / 2), 
         -1.0 * taille - (tailleAppendice / 2), 
         tailleAppendice, 
         tailleAppendice
     );
     ctx.fillRect(
-        -1.0 * taille - (tailleAppendice / 2), 
+        extremiteQueueX - (tailleAppendice / 2), 
         1.0 * taille - (tailleAppendice / 2), 
         tailleAppendice, 
         tailleAppendice
