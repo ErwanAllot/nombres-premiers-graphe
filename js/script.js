@@ -65,6 +65,65 @@ if (epingle3 && epingle7) {
 }
 
 
+// ÉTApe 6 : Génération de l'épingle 11
+
+// On ajoute l'épingle 11
+const epingle11 = creerEpingle(11, -5, 3, 'rouge');
+epinglesEtape.push(epingle11);
+
+// On enregistre en conservant TOUS les chemins précédents
+window.historiqueApp.enregistrerEtape("Génération de l'épingle 11 (Rouge)", epinglesEtape, cheminsEtape);
+
+
+
+
+// ==========================================
+// ÉTAPE 7 : Allongement des queues de 3 et 7
+// ==========================================
+
+// On récupère l'état actuel pour cette étape
+etatActuel = window.historiqueApp.obtenirEtatActuel();
+epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
+cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
+
+// On cherche les épingles dans CETTE étape avec des noms uniques
+const epingle3Actuelle = epinglesEtape.find(e => e.valeur === 3);
+const epingle7Actuelle = epinglesEtape.find(e => e.valeur === 7);
+
+if (epingle3Actuelle) epingle3Actuelle.longueurQueue += 1; 
+if (epingle7Actuelle) epingle7Actuelle.longueurQueue += 1; 
+
+// On enregistre proprement
+window.historiqueApp.enregistrerEtape("Allongement des queues de 3 et 7", epinglesEtape, cheminsEtape);
+
+
+
+
+
+// ==========================================
+// ÉTAPE 8 : Création du chemin (5, 7)
+// ==========================================
+
+etatActuel = window.historiqueApp.obtenirEtatActuel();
+epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
+cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
+
+// On va chercher les versions fraîches de cette étape (avec les queues allongées)
+const epingle5Actuelle = epinglesEtape.find(e => e.valeur === 5);
+const epingle7Actu = epinglesEtape.find(e => e.valeur === 7);
+
+if (epingle5Actuelle && epingle7Actu) {
+    // On calcule avec les bonnes épingles à jour
+    const resultatChemin = calculerCheminEtJoint(epingle5Actuelle, epingle7Actu);
+    
+    cheminsEtape.push(resultatChemin);
+
+    window.historiqueApp.enregistrerEtape("Test unique du chemin (5, 7)", epinglesEtape, cheminsEtape);
+}
+
+
+
+
 
 // ==========================================
 // GESTION DE L'INTERFACE ET DE L'HISTORIQUE
