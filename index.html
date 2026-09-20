@@ -3,13 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphe Nombres Premiers</title>
+    <title>Graphe Nombres Premiers - Moteur Modulaire</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Zone d'affichage graphique -->
     <canvas id="grilleCanvas"></canvas>
-    
-    <!-- Script principal -->
-    <script src="script.js"></script>
+
+    <!-- Interface de contrôle (boutons d'historique et de navigation) -->
+    <div id="panneau-controle">
+        <div class="groupe-boutons">
+            <button id="btn-debut" title="Aller au début">Début</button>
+            <button id="btn-precedent" title="Étape précédente">◀ Précédent</button>
+            <span id="indicateur-etape">Étape : 0 / 0</span>
+            <button id="btn-suivant" title="Étape suivante">Suivant ▶</button>
+            <button id="btn-fin" title="Aller à la fin">Fin</button>
+        </div>
+        <div class="groupe-boutons">
+            <button id="btn-exporter-json" title="Sauvegarder l'état (JSON)">Exporter JSON</button>
+            <label for="input-importer-json" class="bouton-fichier">Importer JSON</label>
+            <input type="file" id="input-importer-json" accept=".json" style="display: none;">
+        </div>
+    </div>
+
+    <!-- Chargement séquentiel des modules (ordre des dépendances strict) -->
+    <script src="js/premiers.js"></script>
+    <script src="js/chemins.js"></script>
+    <script src="js/epingle.js"></script>
+    <script src="js/historique.js"></script>
+    <script src="js/generation.js"></script>
+    <script src="js/rendu.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

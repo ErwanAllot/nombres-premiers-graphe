@@ -12,3 +12,48 @@ canvas {
     width: 100%;
     height: 100%;
 }
+
+/* Style du panneau de contrôle flottant */
+#panneau-controle {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(18, 18, 26, 0.9);
+    border: 1px solid #2a2a35;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #ffffff;
+    font-family: sans-serif;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.groupe-boutons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#panneau-controle button, .bouton-fichier {
+    background: #2b2b3d;
+    color: #fff;
+    border: 1px solid #44445c;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+#panneau-controle button:hover, .bouton-fichier:hover {
+    background: #3d3d5c;
+}
+
+#indicateur-etape {
+    font-size: 13px;
+    padding: 0 6px;
+    color: #a0a0c0;
+}
