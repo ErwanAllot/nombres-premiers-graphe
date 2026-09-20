@@ -23,19 +23,29 @@ function etendreQueueParent(parent, directionX = -1) {
 
 
 function obtenirAncresDisponibles(epingle) {
-    // Si longueurQueue = 1, l'ancre est à 1 unité du corps.
-    // Si longueurQueue = 2, l'ancre recule d'1 unité supplémentaire, etc.
-    const distanceDuCorps = epingle.longueurQueue;
-    
-    // On gère le sens selon que l'épingle est à gauche (X négatif) ou à droite (X positif)
-    const direction = epingle.x <= 0 ? -1 : 1; 
+    const distanceDuCorps = epingle.longueuQueue || epingle.longueurQueue; // Sécurité orthographe
+    const ancres = [];
 
-    // Position X de l'appendice au bout de la queue
-    const xAncre = epingle.x + (direction * distanceDuCorps);
+    // Si l'épingle est orientée horizontalement (0 ou 180 degrés)
+    if (epingle.orientation === 0 || epingle.orientation === 180) {
+        const directionX = epingle.orientation === 0 ? -1 : 1;
+        const xAncre = epingle.x + (directionX * distanceDuCorps);
+        
+        ancres.push(
+            { x: xAncre, y: epingle.y + 1 }, // Ancre du haut
+            { x: xAncre, y: epingle.y - 1 }  // Ancre du bas
+        );
+    } 
+    // Si l'épingle est orientée verticalement (90 ou 270 degrés)
+    else {
+        const directionY = epingle.orientation === 90 ? -1 : 1;
+        const yAncre = epingle.y + (directionY * distanceDuCorps);
+        
+        ancres.push(
+            { x: epingle.x - 1, y: yAncre }, // Ancre de gauche
+            { x: epingle.x + 1, y: yAncre }  // Ancre de droite
+        );
+    }
 
-    return [
-        { x: xAncre, y: epingle.y + 1 }, // Ancre du haut
-        { x: xAncre, y: epingle.y - 1 }  // Ancre du bas
-    ];
+    return ancres;
 }
-

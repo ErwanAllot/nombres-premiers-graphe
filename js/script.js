@@ -10,19 +10,21 @@ let listeEpinglesInitiales = [
 let listeCheminsInitiaux = [];
 let listeEpinglesCompletes = [...listeEpinglesInitiales];
 
-// ÉTAPE 0 : État de départ pur (uniquement les épingles 3 et 5)
+// ÉTAPE 1 : État de départ pur (uniquement les épingles 3 et 5)
 window.historiqueApp.enregistrerEtape("État de départ (3 et 5)", [...listeEpinglesInitiales], []);
 
-// ÉTAPE 1 : Premier chemin entre 3 et 5
+// ÉTAPE 2 : Premier chemin entre 3 et 5
 const premierChemin = calculerCheminEtJoint(listeEpinglesInitiales[0], listeEpinglesInitiales[1]);
 listeCheminsInitiaux.push(premierChemin);
 window.historiqueApp.enregistrerEtape("Tracé du premier chemin vers J", [...listeEpinglesInitiales], [...listeCheminsInitiaux]);
 
-// ÉTAPE 2 : Génération de l'épingle 7
+// ÉTAPE 3 : Génération de l'épingle 7
 const epingle7 = creerEpingle(7, 0, 2, 'rouge');
 listeEpinglesCompletes.push(epingle7);
 window.historiqueApp.enregistrerEtape("Génération de l'épingle 7 (Rouge)", [...listeEpinglesCompletes], [...listeCheminsInitiaux]);
 
+
+// ÉTAPE 4
 
 // 1. On récupère l'état actuel de l'application (les épingles et les chemins)
 let etatActuel = window.historiqueApp.obtenirEtatActuel();
@@ -40,6 +42,27 @@ if (epingle5) epingle5.longueurQueue += 1; // Passe à 2
 window.historiqueApp.enregistrerEtape("Allongement des queues de 3 et 5", epinglesEtape, cheminsEtape);
 
 
+// ÉTAPE 5
+
+// ==========================================
+// ÉTAPE : Création du chemin (3, 7) et de l'épingle 11
+// ==========================================
+
+// On réutilise les variables existantes sans les redéclarer avec 'let'
+etatActuel = window.historiqueApp.obtenirEtatActuel();
+epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
+cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
+
+if (epingle3 && epingle7) {
+    // 2. On calcule le chemin et le joint J via notre moteur d'ancres
+    const resultatChemin = calculerCheminEtJoint(epingle3, epingle7);
+    
+    // 3. On l'ajoute aux chemins SANS toucher aux épingles (pas de création de 11)
+    cheminsEtape.push(resultatChemin);
+
+    // 4. On enregistre l'étape juste pour voir le rendu du chemin
+    window.historiqueApp.enregistrerEtape("Test unique du chemin (3, 7)", epinglesEtape, cheminsEtape);
+}
 
 
 
@@ -127,7 +150,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 4. Initialisation visuelle de l'indicateur d'étape
     mettreAJourUI();
+    
 
     // 5. Lancement de la boucle de rendu
     lancerBoucleRendu(references.ctx, references.canvas);
 });
+
+
+console.log("Liste des chemins :", chemins);

@@ -8,40 +8,88 @@
  * @param {Object} parentGrand - L'épingle du plus grand parent (ex: 5)
  * @returns {Object} Les coordonnées des points de départ, d'arrivée (J) et les métadonnées
  */
+// ==========================================
+// MODULE GÉOMÉTRIQUE : CHEMIN ORTHOGONAL & JOINT J
+// ==========================================
+
+function obtenirAncresDisponibles(epingle) {
+    const distanceDuCorps = epingle.longueurQueue || 1;
+    const direction = epingle.x <= 0 ? -1 : 1; 
+    const xAncre = epingle.x + (direction * distanceDuCorps);
+
+    return [
+        { x: xAncre, y: epingle.y + 1, id: 'haut' },
+        { x: xAncre, y: epingle.y - 1, id: 'bas' }
+    ];
+}
+
 function calculerCheminEtJoint(parentPetit, parentGrand) {
-    // 1. On récupère dynamiquement les vraies ancres de chaque parent 
-    // en tenant compte de leur longueur de queue respective !
+    // 1. Récupération des ancres disponibles
+console.log("=== CALCUL DE CHEMIN ===");
+    console.log("Parent 1 (valeur):", parentPetit.valeur, "aux coordonnées:", { x: parentPetit.x, y: parentPetit.y }, "avec queue:", parentPetit.longueurQueue);
+    console.log("Parent 2 (valeur):", parentGrand.valeur, "aux coordonnées:", { x: parentGrand.x, y: parentGrand.y }, "avec queue:", parentGrand.longueurQueue);
+
+    // 1. Récupération des ancres disponibles
     const ancresPetit = obtenirAncresDisponibles(parentPetit);
     const ancresGrand = obtenirAncresDisponibles(parentGrand);
 
-    // 2. On teste toutes les combinaisons pour trouver la plus proche (distance de Manhattan)
-    let meilleurePaire = null;
-    let distanceMin = Infinity;
+    console.log("Ancres du parent", parentPetit.valeur, ":", ancresPetit);
+    console.log("Ancres du parent", parentGrand.valeur, ":", ancresGrand);
 
-    for (let ap of ancresPetit) {
-        for (let ag of ancresGrand) {
-            const dist = Math.abs(ap.x - ag.x) + Math.abs(ap.y - ag.y);
-            if (dist < distanceMin) {
-                distanceMin = dist;
-                meilleurePaire = { pPetit: ap, pGrand: ag };
+    // 2. Sélection de la paire la plus proche (Distance de Manhattan)
+    let meilleurePaire = null;
+    let distanceMinimale = Infinity;
+
+    for (let appPetit of ancresPetit) {
+        for (let appGrand of ancresGrand) {
+            const dist = Math.abs(appPetit.x - appGrand.x) + Math.abs(appPetit.y - appGrand.y);
+            if (dist < distanceMinimale) {
+                distanceMinimale = dist;
+                meilleurePaire = { pPetit: appPetit, pGrand: appGrand };
             }
         }
     }
 
-    // 3. On calcule le Joint J au milieu de cette paire optimale
-    const jX = (meilleurePaire.pPetit.x + meilleurePaire.pGrand.x) / 2;
-    const jY = (meilleurePaire.pPetit.y + meilleurePaire.pGrand.y) / 2;
+    const p1 = meilleurePaire.pPetit; // x1, y1
+    const p2 = meilleurePaire.pGrand; // x2, y2
+
+    // 3. Application de la règle pour le point pivot Q du chemin orthogonal
+    let xq, yq;
+
+    // Si les deux ancres sont sur le même axe (même X ou même Y)
+    if (p1.x === p2.x || p1.y === p2.y) {
+        xq = (p1.x + p2.x) / 2;
+        yq = (p1.y + p2.y) / 2;
+    } else {
+        // Règle classique des valeurs absolues pour les cas croisés
+        xq = Math.abs(p1.x) > Math.abs(p2.x) ? p1.x : p2.x;
+        yq = Math.abs(p1.y) > Math.abs(p2.y) ? p1.y : p2.y;
+    }
+    
+    const pointQ = { x: xq, y: yq };
+
+    // 4. Définition des segments orthogonaux (L : de p1 -> Q -> p2)
+    // On évite les segments nuls si p1 ou p2 est déjà sur le pivot Q
+    const segments = [];
+    if (p1.x !== pointQ.x || p1.y !== pointQ.y) {
+        segments.push({ debut: p1, fin: pointQ, couleur: 'jaune' });
+    }
+    if (pointQ.x !== p2.x || pointQ.y !== p2.y) {
+        segments.push({ debut: pointQ, fin: p2, couleur: 'bleu' });
+    }
+
+    // 5. Calcul du Joint J (par exemple au milieu du chemin global ou sur le pivot)
+    // Ici, on le place au milieu exact entre p1 et p2 pour l'instant, ou sur Q selon ton design
+    const jX = (p1.x + p2.x) / 2;
+    const jY = (p1.y + p2.y) / 2;
     const pointJ = { x: jX, y: jY };
 
-    // 4. On retourne les segments orthogonaux
-    const segments = [
-        { debut: meilleurePaire.pPetit, fin: pointJ, couleur: 'jaune' },
-        { debut: pointJ, fin: meilleurePaire.pGrand, couleur: 'bleu' }
-    ];
-
     return {
-        departPetit: meilleurePaire.pPetit,
-        departGrand: meilleurePaire.pGrand,
+        parentPetitId: parentPetit.valeur,
+        parentGrandId: parentGrand.valeur,
+        departPetit: p1,
+        departGrand: p2,
+        pointPivotQ: pointQ,
         jointJ: pointJ,
         segments: segments
     };
