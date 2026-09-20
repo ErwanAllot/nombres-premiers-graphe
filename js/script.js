@@ -122,6 +122,39 @@ if (epingle5Actuelle && epingle7Actu) {
 }
 
 
+// ÉTApe 9 : Génération de l'épingle 13
+
+// On ajoute l'épingle 13
+const epingle13 = creerEpingle(13, 4, 4, 'rouge');
+epinglesEtape.push(epingle13);
+
+// On enregistre en conservant TOUS les chemins précédents
+window.historiqueApp.enregistrerEtape("Génération de l'épingle 13 (Rouge)", epinglesEtape, cheminsEtape);
+
+
+
+
+// ==========================================
+// ÉTAPE 10 : Allongement des queues de 5 et 7
+// ==========================================
+
+// On récupère l'état actuel pour cette étape
+etatActuel = window.historiqueApp.obtenirEtatActuel();
+epinglesEtape = JSON.parse(JSON.stringify(etatActuel.epingles));
+cheminsEtape = JSON.parse(JSON.stringify(etatActuel.chemins));
+
+// On cherche les épingles dans CETTE étape avec des noms uniques
+const epingle5t = epinglesEtape.find(e => e.valeur === 5);
+const epingle7t = epinglesEtape.find(e => e.valeur === 7);
+
+if (epingle5t) epingle5t.longueurQueue += 1; 
+if (epingle7t) epingle7t.longueurQueue += 1; 
+
+// On enregistre proprement
+window.historiqueApp.enregistrerEtape("Allongement des queues de 5 et 7", epinglesEtape, cheminsEtape);
+
+
+
 
 
 
