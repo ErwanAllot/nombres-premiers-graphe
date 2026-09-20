@@ -129,10 +129,24 @@ etape("Allongement 5 et 17", (epingles) => {
 
 
 
+// const insererLigne = (epingles, indexLigne) => {
+//     epingles.forEach(p => {
+//         if (p.y >= indexLigne) {
+//             p.y += 1; // On décale les épingles situées en dessous
+//         }
+//     });
+// };
+
+
 const insererLigne = (epingles, indexLigne) => {
+    console.log("-> Appel de insererLigne sur index :", indexLigne); // <--- Ajoute ça
+    const cible = Number(indexLigne);
     epingles.forEach(p => {
-        if (p.y >= indexLigne) {
-            p.y += 1; // On décale les épingles situées en dessous
+        const currentY = Number(p.y);
+        // Utilise '>=' si tu veux que l'épingle sur la ligne descende, 
+        // ou '>' si tu veux qu'elle reste fixe.
+        if (currentY >= cible) {
+            p.y = currentY + 1; // Forcé en nombre, fini la concaténation foireuse !
         }
     });
 };
@@ -141,13 +155,32 @@ const insererLigne = (epingles, indexLigne) => {
 
 etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
     // 1. On décale les épingles
-    insererLigne(epingles, 2);
+    console.log("1. Épingles avant insertion :", JSON.stringify(epingles));
+    
+    insererLigne(epingles, -10);
+    
+    console.log("2. Épingles après insertion :", JSON.stringify(epingles));
     
     // 2. On recalcule les chemins
-    chemins.forEach(c => {
+chemins.forEach((c, index) => {
+        console.log(`Chemin [${index}] brut :`, c);
+        
         const pPetit = ep(epingles, c.parentPetitId);
         const pGrand = ep(epingles, c.parentGrandId);
+
+        console.log(`-> Trouvé pPetit (${c.parentPetitId}) :`, pPetit);
+        console.log(`-> Trouvé pGrand (${c.parentGrandId}) :`, pGrand);
+
+        if (!pPetit || !pGrand) {
+            console.warn(`⚠️ ALerte : Chemin [${index}] abandonné car parents introuvables !`);
+            return;
+        }
+
+
         const nouveauChemin = calculerCheminEtJoint(pPetit, pGrand);
+
+        console.log(`Ancien chemin [${index}] segments :`, c.segments);
+        console.log(`Nouveau chemin [${index}] segments :`, nouveauChemin.segments);
         
         c.departPetit = nouveauChemin.departPetit;
         c.departGrand = nouveauChemin.departGrand;
@@ -157,8 +190,10 @@ etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
     });
 
     // 3. ON ACTIVE LE RENDU VISUEL DE LA LIGNE
-    options.ligneInseree = 2;
+    options.ligneInseree = -10;
 });
+
+
 
 
 
