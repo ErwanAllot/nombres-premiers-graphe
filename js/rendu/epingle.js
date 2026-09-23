@@ -70,7 +70,7 @@ function dessinerTexte(ctx, epingle, pixelX, pixelY, echelle) {
 /**
  * Fonction principale : assemble tous les morceaux de l'épingle.
  */
-function dessinerEpingle(ctx, epingle, etatGrille) {
+export function dessinerEpingle(ctx, epingle, etatGrille) {
     const echelle = etatGrille.echelle;
     const pixelX = epingle.x * echelle + etatGrille.decalageX;
     const pixelY = epingle.y * echelle + etatGrille.decalageY;

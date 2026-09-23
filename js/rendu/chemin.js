@@ -2,7 +2,7 @@
 // MODULE RENDU : TRACÉ DES CHEMINS, DE Q ET DE J
 // ==========================================
 
-function dessinerPoint(ctx, px, py, rayon, couleur) {
+export function dessinerPoint(ctx, px, py, rayon, couleur) {
     ctx.beginPath();
     ctx.arc(px, py, rayon, 0, 2 * Math.PI);
     ctx.fillStyle = couleur;
@@ -12,7 +12,7 @@ function dessinerPoint(ctx, px, py, rayon, couleur) {
     ctx.stroke();
 }
 
-function dessinerSegments(ctx, segments, echelle, decalageX, decalageY) {
+export function dessinerSegments(ctx, segments, echelle, decalageX, decalageY) {
     if (!segments || segments.length === 0) return;
 
     segments.forEach(seg => {
@@ -30,7 +30,7 @@ function dessinerSegments(ctx, segments, echelle, decalageX, decalageY) {
     });
 }
 
-function dessinerPointPivotQ(ctx, pointPivotQ, parentPetitId, parentGrandId, echelle, decalageX, decalageY) {
+export function dessinerPointPivotQ(ctx, pointPivotQ, parentPetitId, parentGrandId, echelle, decalageX, decalageY) {
     if (!pointPivotQ) return;
 
     const pxQ_X = pointPivotQ.x * echelle + decalageX;
@@ -39,7 +39,7 @@ function dessinerPointPivotQ(ctx, pointPivotQ, parentPetitId, parentGrandId, ech
     dessinerPoint(ctx, pxQ_X, pxQ_Y, 4, '#FF4444');
 }
 
-function dessinerJointJ(ctx, jointJ, echelle, decalageX, decalageY) {
+export function dessinerJointJ(ctx, jointJ, echelle, decalageX, decalageY) {
     if (!jointJ) return;
 
     const pxJX = jointJ.x * echelle + decalageX;
@@ -50,7 +50,7 @@ function dessinerJointJ(ctx, jointJ, echelle, decalageX, decalageY) {
 /**
  * Fonction principale : orchestre le rendu du chemin, de Q et de J.
  */
-function dessinerChemin(ctx, chemin, etatGrille) {
+export function dessinerChemin(ctx, chemin, etatGrille) {
     const { echelle, decalageX, decalageY } = etatGrille;
 
     // 1. Tracé des segments du chemin en "L"

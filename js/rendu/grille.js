@@ -2,11 +2,11 @@
 // MODULE RENDU : DESSIN DU CANVAS (GRILLE & AXES)
 // ==========================================
 
-function effacerCanvas(ctx, canvas) {
+export function effacerCanvas(ctx, canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function dessinerGrilleSecondaire(ctx, canvas, etatGrille) {
+export function dessinerGrilleSecondaire(ctx, canvas, etatGrille) {
     ctx.strokeStyle = '#181820';
     ctx.lineWidth = 1;
 
@@ -31,7 +31,7 @@ function dessinerGrilleSecondaire(ctx, canvas, etatGrille) {
     }
 }
 
-function dessinerAxesPrincipaux(ctx, canvas, etatGrille) {
+export function dessinerAxesPrincipaux(ctx, canvas, etatGrille) {
     ctx.lineWidth = 2;
 
     // Axe Y (abscisse 0)
@@ -52,7 +52,7 @@ function dessinerAxesPrincipaux(ctx, canvas, etatGrille) {
 
 
 
-function dessinerInsertionGrille(ctx, canvas, etatGrille) {
+export function dessinerInsertionGrille(ctx, canvas, etatGrille) {
     const echelle = etatGrille.echelle;
 
     // Si une ligne logique est marquée pour l'insertion (ex: etatGrille.ligneInseree = 2)
@@ -74,13 +74,13 @@ function dessinerInsertionGrille(ctx, canvas, etatGrille) {
     }
 }
 
-function dessinerLigneInseree(ctx, canvas, etatGrille, yLogique) {
+export function dessinerLigneInseree(ctx, canvas, etatGrille, yLogique) {
     const py = yLogique * etatGrille.echelle + etatGrille.decalageY;
     ctx.fillStyle = '#4a1525'; // Rouge bordeaux discret
     ctx.fillRect(0, py, canvas.width, etatGrille.echelle);
 }
 
-function dessinerColonneInseree(ctx, canvas, etatGrille, xLogique) {
+export function dessinerColonneInseree(ctx, canvas, etatGrille, xLogique) {
     const px = xLogique * etatGrille.echelle + etatGrille.decalageX;
     ctx.fillStyle = '#4a1525';
     ctx.fillRect(px, 0, etatGrille.echelle, canvas.height);

@@ -2,7 +2,7 @@
 // MODULE INTERACTIONS : ÉTAT, TAILLE & SOURIS
 // ==========================================
 
-const etatGrille = {
+export const etatGrille = {
     echelle: 50,
     decalageX: 0,
     decalageY: 0,
@@ -13,7 +13,7 @@ const etatGrille = {
 
 let canvas, ctx;
 
-function initialiserCanvasEtInteractions() {
+export function initialiserCanvasEtInteractions() {
     canvas = document.getElementById('grilleCanvas');
     ctx = canvas.getContext('2d');
     
@@ -24,17 +24,17 @@ function initialiserCanvasEtInteractions() {
     return { canvas, ctx };
 }
 
-function redimensionnerCanvas() {
+export function redimensionnerCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 
-function centrerOrigineInitial() {
+export function centrerOrigineInitial() {
     etatGrille.decalageX = canvas.width / 2;
     etatGrille.decalageY = canvas.height / 2;
 }
 
-function convertirPixelsVersGrille(pixelX, pixelY, etat) {
+export function convertirPixelsVersGrille(pixelX, pixelY, etat) {
     const x = (pixelX - etat.decalageX) / etat.echelle;
     const y = (pixelY - etat.decalageY) / etat.echelle; // Direct (le bas devient positif)
     return { x, y };
@@ -42,7 +42,7 @@ function convertirPixelsVersGrille(pixelX, pixelY, etat) {
 
 
 
-function configurerEcouteursEvenements() {
+export function configurerEcouteursEvenements() {
     window.addEventListener('resize', redimensionnerCanvas);
 
     canvas.addEventListener('mousedown', (e) => {

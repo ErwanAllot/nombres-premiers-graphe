@@ -1,4 +1,14 @@
 // ==========================================
+// IMPORTS (Les dépendances du module principal)
+// ==========================================
+import { effacerCanvas, dessinerGrilleSecondaire, dessinerAxesPrincipaux, dessinerLigneInseree } from './rendu/grille.js';
+import { dessinerChemin } from './rendu/chemin.js';
+import { dessinerEpingle } from './rendu/epingle.js';
+import { etatGrille, initialiserCanvasEtInteractions } from './interactions/souris.js';
+
+
+
+// ==========================================
 // GESTION DE L'INTERFACE ET DE L'HISTORIQUE
 // ==========================================
 
