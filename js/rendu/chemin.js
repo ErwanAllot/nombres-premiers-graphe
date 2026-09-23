@@ -26,10 +26,12 @@ export function dessinerSegments(ctx, segments, echelle, decalageX, decalageY) {
         ctx.lineTo(pxFinX, pxFinY);
 
         // --- GESTION DES COULEURS DE TRACÉ ---
-        if (seg.couleur === 'jaune') {
+if (seg.couleur === 'jaune') {
             ctx.strokeStyle = '#FFCC00';
         } else if (seg.couleur === 'rose') {
             ctx.strokeStyle = '#FF69B4'; // Rose vif
+        } else if (seg.couleur === 'vert') {
+            ctx.strokeStyle = '#00ff0d'; // Vert
         } else {
             ctx.strokeStyle = '#00BFFF'; // Bleu par défaut
         }
@@ -60,6 +62,23 @@ export function dessinerJointJ(ctx, jointJ, echelle, decalageX, decalageY) {
     // dessinerPoint(ctx, pxJX, pxJY, Math.max(3, echelle * 0.15), '#FFFFFF');
 }
 
+export function dessinerPointM(ctx, pointM, echelle, decalageX, decalageY) {
+    if (!pointM) return;
+    const pxM_X = pointM.x * echelle + decalageX;
+    const pxM_Y = pointM.y * echelle + decalageY;
+    dessinerPoint(ctx, pxM_X, pxM_Y, 4, '#FFA500'); // M en orange
+}
+
+
+export function dessinerPointS(ctx, pointM, echelle, decalageX, decalageY) {
+    if (!pointM) return;
+    const pxM_X = pointM.x * echelle + decalageX;
+    const pxM_Y = pointM.y * echelle + decalageY;
+    dessinerPoint(ctx, pxM_X, pxM_Y, 4, '#00ff0d'); 
+}
+
+
+
 /**
  * Fonction principale : orchestre le rendu du chemin, de Q, de Z et de J.
  */
@@ -77,4 +96,8 @@ export function dessinerChemin(ctx, chemin, etatGrille) {
 
     // 4. Affichage graphique du point J (en blanc, si activé)
     dessinerJointJ(ctx, chemin.jointJ, echelle, decalageX, decalageY);
+
+    dessinerPointM(ctx, chemin.pointM, echelle, decalageX, decalageY); // <-- Appel du rendu pour M
+
+    dessinerPointS(ctx, chemin.pointS, echelle, decalageX, decalageY);
 }

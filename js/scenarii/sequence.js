@@ -31,10 +31,18 @@ window.historiqueApp.enregistrerEtape("État de départ (3 et 5)", [...listeEpin
 
 
 // ÉTAPE 2 : Premier chemin
+// etape("Tracé du premier chemin vers J", (epingles, chemins, options) => {
+//     ajouterCheminEntre(epingles, chemins, 3, 5);
+//     options.nombrePremier = 7;
+// });
 etape("Tracé du premier chemin vers J", (epingles, chemins, options) => {
-    ajouterCheminEntre(epingles, chemins, 3, 5);
-    options.nombrePremier = 7;
+    // 1. On définit d'abord le nombre premier pour cette étape
+    options.nombrePremier = 7; 
+    
+    // 2. Ensuite on appelle la fonction qui va bien l'utiliser
+    ajouterCheminEntre(epingles, chemins, 3, 5, options); 
 });
+
 // ÉTAPE 3 : Épingle 7
 etape("Génération de l'épingle 7", (epingles) => {
     genererEpingleSuivante(epingles);
@@ -48,10 +56,18 @@ etape("Allongement des queues de 3 et 5", (epingles) => {
 
 
 // ÉTAPE 5 : Chemin (3, 7)
-etape("Test unique du chemin (3, 7)", (epingles, chemins, options) => {
-    ajouterCheminEntre(epingles, chemins, 3, 7);
-    options.nombrePremier = 11;
+// etape("Test unique du chemin (3, 7)", (epingles, chemins, options) => {
+//     ajouterCheminEntre(epingles, chemins, 3, 7);
+//     options.nombrePremier = 11;
+// });
+etape("Tracé du premier chemin vers J", (epingles, chemins, options) => {
+    // 1. On définit d'abord le nombre premier pour cette étape
+    options.nombrePremier = 11; 
+    
+    // 2. Ensuite on appelle la fonction qui va bien l'utiliser
+    ajouterCheminEntre(epingles, chemins, 3, 7, options); 
 });
+
 // ÉTAPE 6 : Épingle 11
 etape("Génération de l'épingle 11 (Rouge)", (epingles) => {
     genererEpingleSuivante(epingles);
