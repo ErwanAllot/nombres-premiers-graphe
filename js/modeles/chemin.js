@@ -98,9 +98,9 @@ export function calculerPointS(pointM, distance, obstaclesSet = new Set()) {
     // CAS 1 : M est sur l'un des axes principaux (Mx = 0 ou My = 0)
     if (pointM.x === 0 || pointM.y === 0) {
         if (pointM.x === 0) {
-            Sy += (pointM.y >= 0) ? distance : -distance;
+            Sy += (pointM.y >= 0) ? Math.ceil(distance / 2) : -Math.ceil(distance / 2);
         } else {
-            Sx += (pointM.x >= 0) ? distance : -distance;
+            Sx += (pointM.x >= 0) ? Math.ceil(distance / 2) : -Math.ceil(distance / 2);
         }
         return { x: Sx, y: Sy };
     }
