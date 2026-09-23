@@ -5,7 +5,7 @@
 /**
  * Calcule les ancres disponibles au bout de la queue de l'épingle (horizontal ou vertical).
  */
-function sbtenirAncresDisponibles(epingle) {
+function obtenirAncresDisponibles(epingle) {
     const longueurQueue = epingle.longueurQueue || 1;
     const distanceTotal = 1 + longueurQueue;
     const orient = epingle.orientation !== undefined ? epingle.orientation : 0;
@@ -90,8 +90,8 @@ function creerSegments(p1, p2, pointQ) {
  */
 function calculerCheminEtJoint(parentPetit, parentGrand) {
     // 1. Récupération des ancres
-    const ancresPetit = sbtenirAncresDisponibles(parentPetit);
-    const ancresGrand = sbtenirAncresDisponibles(parentGrand);
+    const ancresPetit = obtenirAncresDisponibles(parentPetit);
+    const ancresGrand = obtenirAncresDisponibles(parentGrand);
 
     // 2. Sélection de la paire la plus proche
     const meilleurePaire = trouverMeilleurePaireAncres(ancresPetit, ancresGrand);
