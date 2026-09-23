@@ -1,5 +1,5 @@
-import { creerEpingle } from './modeles/epingle.js';
-import { obtenirAncresDisponibles, calculerCheminEtJoint, creerSegments, calculerPointPivotQ } from './modeles/chemin.js';
+import { obtenirAncresDisponibles, creerEpingle } from '../modeles/epingle.js';
+import { calculerCheminEtJoint, creerSegments, calculerPointPivotQ } from '../modeles/chemin.js';
 
 // --- RACCOURCIS MÉTIER POUR LE SCÉNARIO ---
 const ep = (epingles, val) => epingles.find(e => e.valeur === val);

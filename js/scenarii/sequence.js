@@ -1,4 +1,4 @@
-import { creerEpingle } from './modeles/epingle.js';
+import { creerEpingle } from '../modeles/epingle.js';
 import { 
     ajouterCheminEntre, 
     rallongerDeuxQueues, 
