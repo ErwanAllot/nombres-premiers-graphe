@@ -1,0 +1,25 @@
+{
+  "name": "nombres-premiers-graphe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "analyser.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErwanAllot/nombres-premiers-graphe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ErwanAllot/nombres-premiers-graphe/issues"
+  },
+  "homepage": "https://github.com/ErwanAllot/nombres-premiers-graphe#readme",
+  "devDependencies": {
+    "vite": "^8.3.0"
+  }
+}

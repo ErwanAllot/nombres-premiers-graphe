@@ -1,12 +1,12 @@
 // ==========================================
 // IMPORTS (Toujours tout en haut du fichier)
 // ==========================================
-import { effacerCanvas, dessinerGrilleSecondaire, dessinerAxesPrincipaux, dessinerLigneInseree, dessinerColonneInseree } from './rendu/grille.js';
-import { dessinerChemin } from './rendu/chemin.js';
-import { dessinerEpingle } from './rendu/epingle.js';
-import { etatGrille, initialiserCanvasEtInteractions } from './interactions/souris.js';
-import { initialiserBoutons } from './interactions/btn.js';
-import './scenarii/sequence.js'; // Charge ton scénario
+import { effacerCanvas, dessinerGrilleSecondaire, dessinerAxesPrincipaux, dessinerLigneInseree, dessinerColonneInseree } from '@/rendu/grille.js';
+import { dessinerChemin } from '@/rendu/chemin.js';
+import { dessinerEpingle } from '@/rendu/epingle.js';
+import { etatGrille, initialiserCanvasEtInteractions } from '@/interactions/souris.js';
+import { initialiserBoutons } from '@/interactions/btn.js';
+import '@/scenarii/sequence.js'; // Charge ton scénario
 
 
 initialiserBoutons(); // Appelle la fonction importée

@@ -1,4 +1,4 @@
-import { obtenirAncresDisponibles } from './epingle.js';
+import { obtenirAncresDisponibles } from '@/modeles/epingle.js';
 
 // ==========================================
 // MODULE MODÈLE : CHEMIN & JOINT J
