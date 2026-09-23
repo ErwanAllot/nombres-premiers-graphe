@@ -1,12 +1,12 @@
 // ==========================================
-// IMPORTS (Les dépendances du module principal)
+// IMPORTS (Toujours tout en haut du fichier)
 // ==========================================
-import { effacerCanvas, dessinerGrilleSecondaire, dessinerAxesPrincipaux, dessinerLigneInseree } from './rendu/grille.js';
+import { effacerCanvas, dessinerGrilleSecondaire, dessinerAxesPrincipaux, dessinerLigneInseree, dessinerColonneInseree } from './rendu/grille.js';
 import { dessinerChemin } from './rendu/chemin.js';
 import { dessinerEpingle } from './rendu/epingle.js';
 import { etatGrille, initialiserCanvasEtInteractions } from './interactions/souris.js';
-
-import './sequence.js';
+import { initialiserBoutons } from './interactions/btn.js';
+import './sequence.js'; // Charge ton scénario
 
 
 // ==========================================
@@ -41,7 +41,7 @@ function lancerBoucleRendu(ctx, canvas) {
         effacerCanvas(ctx, canvas);
 
         // Récupération de l'état actif depuis l'historique global
-        const etatActuel = window.historiqueApp.obtenirEtatActuel();
+        const etatActuel = window.historiqueApp ? window.historiqueApp.obtenirEtatActuel() : null;
 
         // 1. FOND : Afficher la ligne/colonne insérée de l'étape (si elle existe)
         if (etatActuel) {
@@ -59,13 +59,17 @@ function lancerBoucleRendu(ctx, canvas) {
 
         if (etatActuel) {
             // 3. Dessiner les chemins de l'étape active
-            for (let chemin of etatActuel.chemins) {
-                dessinerChemin(ctx, chemin, etatGrille);
+            if (etatActuel.chemins) {
+                for (let chemin of etatActuel.chemins) {
+                    dessinerChemin(ctx, chemin, etatGrille);
+                }
             }
 
             // 4. Dessiner les épingles de l'étape active (tout en haut)
-            for (let epingle of etatActuel.epingles) {
-                dessinerEpingle(ctx, epingle, etatGrille);
+            if (etatActuel.epingles) {
+                for (let epingle of etatActuel.epingles) {
+                    dessinerEpingle(ctx, epingle, etatGrille);
+                }
             }
         }
         
@@ -83,7 +87,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // 1. Initialisation du canvas et de la souris
     const references = initialiserCanvasEtInteractions();
 
-    // 2. Branchement des boutons de l'interface HTML
+    // 2. Branchement des boutons de l'interface HTML (si tu utilises ton btn.js ou les boutons directs)
     const btnPrecedent = document.getElementById('btn-precedent');
     const btnSuivant = document.getElementById('btn-suivant');
 
@@ -93,6 +97,9 @@ window.addEventListener('DOMContentLoaded', () => {
     if (btnSuivant) {
         btnSuivant.addEventListener('click', () => naviguerHistorique('suivant'));
     }
+
+    // Si tu utilises les boutons début/fin de ton module btn.js, on peut aussi les initialiser ici proprement :
+    // initialiserBoutons(() => mettreAJourUI());
 
     // 3. Branchement des flèches du clavier
     window.addEventListener('keydown', (e) => {
@@ -105,10 +112,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 4. Initialisation visuelle de l'indicateur d'étape
     mettreAJourUI();
-    
 
     // 5. Lancement de la boucle de rendu
     lancerBoucleRendu(references.ctx, references.canvas);
 });
-
-

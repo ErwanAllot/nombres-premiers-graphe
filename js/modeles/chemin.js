@@ -5,7 +5,7 @@
 /**
  * Calcule les ancres disponibles au bout de la queue de l'épingle (horizontal ou vertical).
  */
-function obtenirAncresDisponibles(epingle) {
+export function obtenirAncresDisponibles(epingle) {
     const longueurQueue = epingle.longueurQueue || 1;
     const distanceTotal = 1 + longueurQueue;
     const orient = epingle.orientation !== undefined ? epingle.orientation : 0;
@@ -33,7 +33,7 @@ function obtenirAncresDisponibles(epingle) {
 /**
  * Trouve la paire d'ancres la plus proche entre deux épingles (Distance de Manhattan).
  */
-function trouverMeilleurePaireAncres(ancresPetit, ancresGrand) {
+export function trouverMeilleurePaireAncres(ancresPetit, ancresGrand) {
     let meilleurePaire = null;
     let distanceMinimale = Infinity;
 
@@ -52,7 +52,7 @@ function trouverMeilleurePaireAncres(ancresPetit, ancresGrand) {
 /**
  * Calcule le point pivot Q du chemin orthogonal en "L".
  */
-function calculerPointPivotQ(p1, p2) {
+export function calculerPointPivotQ(p1, p2) {
     if (p1.x === p2.x || p1.y === p2.y) {
         const midX = (p1.x + p2.x) / 2;
         const midY = (p1.y + p2.y) / 2;
@@ -74,7 +74,7 @@ function calculerPointPivotQ(p1, p2) {
 /**
  * Génère les segments du chemin (évite les segments nuls).
  */
-function creerSegments(p1, p2, pointQ) {
+export function creerSegments(p1, p2, pointQ) {
     const segments = [];
     if (p1.x !== pointQ.x || p1.y !== pointQ.y) {
         segments.push({ debut: p1, fin: pointQ, couleur: 'jaune' });
@@ -88,7 +88,7 @@ function creerSegments(p1, p2, pointQ) {
 /**
  * Fonction principale : Calcule le Joint J et les données du chemin entre deux épingles parentes.
  */
-function calculerCheminEtJoint(parentPetit, parentGrand) {
+export function calculerCheminEtJoint(parentPetit, parentGrand) {
     // 1. Récupération des ancres
     const ancresPetit = obtenirAncresDisponibles(parentPetit);
     const ancresGrand = obtenirAncresDisponibles(parentGrand);

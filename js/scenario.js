@@ -1,4 +1,5 @@
 import { creerEpingle } from './modeles/epingle.js';
+import { obtenirAncresDisponibles, calculerCheminEtJoint, creerSegments, calculerPointPivotQ } from './modeles/chemin.js';
 
 // --- RACCOURCIS MÉTIER POUR LE SCÉNARIO ---
 const ep = (epingles, val) => epingles.find(e => e.valeur === val);
@@ -55,6 +56,7 @@ export const genererEpingleSuivante = (epingles) => {
 
     nouvelleEpingle(epingles, valPremier, x, y, color);
 };
+
 const nouvelleEpingle = (epingles, val, x, y, couleur = 'rouge') => {
     epingles.push(creerEpingle(val, x, y, couleur));
 };
