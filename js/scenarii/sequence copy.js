@@ -39,6 +39,12 @@ etape("Allongement des queues de 3 et 5", (epingles) => {
 
 
 
+
+
+
+
+
+
 // ÉTAPE 5 : Chemin (3, 7)
 etape("Test unique du chemin (3, 7)", (epingles, chemins, options) => {
     ajouterCheminEntre(epingles, chemins, 3, 7);
@@ -97,3 +103,40 @@ etape("Épingle 19 (Rouge)", (epingles) => {
 etape("Allongement 7 et 11", (epingles) => {
     rallongerDeuxQueues(epingles);
 });
+
+
+etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
+    const indexCible = 1;
+
+    // 1. On décale les épingles (en gardant celles sur la ligne fixes si tu utilises strict '>')
+    insererLigne(epingles, indexCible);
+    
+    // 2. On recalcule fidèlement CHAQUE chemin du tableau
+    chemins.forEach((c, index) => {
+        const cheminMisAJour = recalculerCheminFidele(c, epingles);
+        if (cheminMisAJour) {
+            chemins[index] = cheminMisAJour; // On remplace par le chemin mis à jour
+        }
+    });
+    
+    // 3. On active le rendu visuel
+    options.ligneInseree = indexCible;
+
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+});
+
+
+// ÉTAPE 17 : Chemin (5, 17)
+etape("Chemin (5, 17)", (epingles, chemins, options) => {
+    ajouterCheminEntre(epingles, chemins, 5, 17);
+    options.nombrePremier = 23;
+});
+//ÉTAPE 18 : Épingle 23
+etape("Épingle 23 (Rouge)", (epingles) => {
+    genererEpingleSuivante(epingles);
+});
+//ÉTAPE 19 : Allongement 5 et 17
+etape("Allongement 5 et 17", (epingles) => {
+    rallongerDeuxQueues(epingles);
+});
+

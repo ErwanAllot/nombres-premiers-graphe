@@ -24,49 +24,57 @@ export function dessinerSegments(ctx, segments, echelle, decalageX, decalageY) {
         ctx.beginPath();
         ctx.moveTo(pxDebutX, pxDebutY);
         ctx.lineTo(pxFinX, pxFinY);
-        ctx.strokeStyle = seg.couleur === 'jaune' ? '#FFCC00' : '#00BFFF';
+
+        // --- GESTION DES COULEURS DE TRACÉ ---
+        if (seg.couleur === 'jaune') {
+            ctx.strokeStyle = '#FFCC00';
+        } else if (seg.couleur === 'rose') {
+            ctx.strokeStyle = '#FF69B4'; // Rose vif
+        } else {
+            ctx.strokeStyle = '#00BFFF'; // Bleu par défaut
+        }
+
         ctx.lineWidth = Math.max(2, echelle * 0.1);
         ctx.stroke();
     });
 }
 
-export function dessinerPointPivotQ(ctx, pointPivotQ, parentPetitId, parentGrandId, echelle, decalageX, decalageY) {
+export function dessinerPointPivotQ(ctx, pointPivotQ, echelle, decalageX, decalageY) {
     if (!pointPivotQ) return;
-
     const pxQ_X = pointPivotQ.x * echelle + decalageX;
     const pxQ_Y = pointPivotQ.y * echelle + decalageY;
-        
-    dessinerPoint(ctx, pxQ_X, pxQ_Y, 4, '#FF4444');
+    dessinerPoint(ctx, pxQ_X, pxQ_Y, 4, '#FF4444'); // Q en rouge
+}
+
+export function dessinerPointZ(ctx, pointZ, echelle, decalageX, decalageY) {
+    if (!pointZ) return;
+    const pxZ_X = pointZ.x * echelle + decalageX;
+    const pxZ_Y = pointZ.y * echelle + decalageY;
+    dessinerPoint(ctx, pxZ_X, pxZ_Y, 5, '#FF69B4'); // Z en rose
 }
 
 export function dessinerJointJ(ctx, jointJ, echelle, decalageX, decalageY) {
     if (!jointJ) return;
-
     const pxJX = jointJ.x * echelle + decalageX;
     const pxJY = jointJ.y * echelle + decalageY;
     // dessinerPoint(ctx, pxJX, pxJY, Math.max(3, echelle * 0.15), '#FFFFFF');
 }
 
 /**
- * Fonction principale : orchestre le rendu du chemin, de Q et de J.
+ * Fonction principale : orchestre le rendu du chemin, de Q, de Z et de J.
  */
 export function dessinerChemin(ctx, chemin, etatGrille) {
     const { echelle, decalageX, decalageY } = etatGrille;
 
-    // 1. Tracé des segments du chemin en "L"
+    // 1. Tracé des segments du chemin (jaune, bleu, rose)
     dessinerSegments(ctx, chemin.segments, echelle, decalageX, decalageY);
 
     // 2. Affichage graphique du point pivot Q (en rouge)
-    dessinerPointPivotQ(
-        ctx, 
-        chemin.pointPivotQ, 
-        chemin.parentPetitId, 
-        chemin.parentGrandId, 
-        echelle, 
-        decalageX, 
-        decalageY
-    );
+    dessinerPointPivotQ(ctx, chemin.pointPivotQ, echelle, decalageX, decalageY);
 
-    // 3. Affichage graphique du point J d'origine (en blanc, actuellement commenté)
+    // 3. Affichage graphique du point Z (bout du segment rose)
+    dessinerPointZ(ctx, chemin.pointZ, echelle, decalageX, decalageY);
+
+    // 4. Affichage graphique du point J (en blanc, si activé)
     dessinerJointJ(ctx, chemin.jointJ, echelle, decalageX, decalageY);
 }

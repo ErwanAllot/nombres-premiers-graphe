@@ -33,34 +33,6 @@ export const allongerQueues = (epingles, ...valeurs) => {
 
 
 
-// export const genererEpingleSuivante = (epingles) => {
-//     const etatPrecedent = window.historiqueApp.obtenirEtatActuel();
-//     if (!etatPrecedent) return;
-
-//     let x = 0;
-//     let y = 0;
-//     let idPetit = 0;
-//     let idGrand = 0;
-
-//     if (etatPrecedent.chemins && etatPrecedent.chemins.length > 0) {
-//         const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
-//         x = dernierChemin.pointPivotQ.x;
-//         y = dernierChemin.pointPivotQ.y;
-//         idPetit = dernierChemin.parentPetitId;
-//         idGrand = dernierChemin.parentGrandId;
-//     }
-
-//     const valPremier = etatPrecedent.nombrePremier;
-//     const polarite = idGrand + idPetit - valPremier;
-//     const color = (polarite === -1) ? 'vert' : 'rouge';
-
-//     nouvelleEpingle(epingles, valPremier, x, y, color);
-// };
-
-// const nouvelleEpingle = (epingles, val, x, y, couleur = 'rouge') => {
-//     epingles.push(creerEpingle(val, x, y, couleur));
-// };
-
 export const genererEpingleSuivante = (epingles) => {
     const etatPrecedent = window.historiqueApp.obtenirEtatActuel();
     if (!etatPrecedent) return;
@@ -72,11 +44,8 @@ export const genererEpingleSuivante = (epingles) => {
 
     if (etatPrecedent.chemins && etatPrecedent.chemins.length > 0) {
         const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
-        
-        // --- C'EST ICI QU'ON CHANGE Q PAR Z ---
-        x = dernierChemin.pointZ.x;
-        y = dernierChemin.pointZ.y;
-        
+        x = dernierChemin.pointPivotQ.x;
+        y = dernierChemin.pointPivotQ.y;
         idPetit = dernierChemin.parentPetitId;
         idGrand = dernierChemin.parentGrandId;
     }
@@ -87,9 +56,11 @@ export const genererEpingleSuivante = (epingles) => {
 
     nouvelleEpingle(epingles, valPremier, x, y, color);
 };
+
 const nouvelleEpingle = (epingles, val, x, y, couleur = 'rouge') => {
     epingles.push(creerEpingle(val, x, y, couleur));
 };
+
 
 
 // --- LES OUTILS ---

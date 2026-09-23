@@ -4,6 +4,8 @@ import { obtenirAncresDisponibles } from '@/modeles/epingle.js';
 // MODULE MODÈLE : CHEMIN & JOINT J
 // ==========================================
 
+
+
 /**
  * Trouve la paire d'ancres la plus proche entre deux épingles (Distance de Manhattan).
  */
@@ -46,7 +48,22 @@ export function calculerPointPivotQ(p1, p2) {
 }
 
 /**
- * Calcule un point Z prolongeant Q vers l'extérieur pour préparer la future épingle 7.
+ * Génère les segments du chemin (évite les segments nuls).
+ */
+export function creerSegments(p1, p2, pointQ) {
+    const segments = [];
+    if (p1.x !== pointQ.x || p1.y !== pointQ.y) {
+        segments.push({ debut: p1, fin: pointQ, couleur: 'jaune' });
+    }
+    if (pointQ.x !== p2.x || pointQ.y !== p2.y) {
+        segments.push({ debut: pointQ, fin: p2, couleur: 'bleu' });
+    }
+    return segments;
+}
+
+
+/**
+ * Calcule un point Z prolongeant Q vers l'extérieur
  */
 export function calculerPointZ(p1, p2, pointQ) {
     const midX = (p1.x + p2.x) / 2;
@@ -61,23 +78,51 @@ export function calculerPointZ(p1, p2, pointQ) {
     };
 }
 
-/**
- * Génère les segments du chemin (évite les segments nuls).
- */
-export function creerSegments(p1, p2, pointQ) {
-    const segments = [];
-    if (p1.x !== pointQ.x || p1.y !== pointQ.y) {
-        segments.push({ debut: p1, fin: pointQ, couleur: 'jaune' });
-    }
-    if (pointQ.x !== p2.x || pointQ.y !== p2.y) {
-        segments.push({ debut: pointQ, fin: p2, couleur: 'bleu' });
-    }
-    return segments;
-}
 
 /**
- * Fonction principale : Calcule le Joint J, le pivot Q, le point Z et les segments.
+ * Fonction principale : Calcule le Joint J et les données du chemin entre deux épingles parentes.
  */
+// export function calculerCheminEtJoint(parentPetit, parentGrand) {
+//     // 1. Récupération des ancres
+//     const ancresPetit = obtenirAncresDisponibles(parentPetit);
+//     const ancresGrand = obtenirAncresDisponibles(parentGrand);
+
+//     // 2. Sélection de la paire la plus proche
+//     const meilleurePaire = trouverMeilleurePaireAncres(ancresPetit, ancresGrand);
+//     const p1 = meilleurePaire.pPetit; 
+//     const p2 = meilleurePaire.pGrand; 
+
+//     // 3. Calcul du pivot Q
+//     const pointQ = calculerPointPivotQ(p1, p2);
+
+//     // 4. Définition des segments
+//     const segments = creerSegments(p1, p2, pointQ);
+
+//     // 5. Calcul du Joint J (milieu exact entre p1 et p2)
+//     const pointJ = {
+//         x: (p1.x + p2.x) / 2,
+//         y: (p1.y + p2.y) / 2
+//     };
+
+//     return {
+//         parentPetitId: parentPetit.valeur,
+//         parentGrandId: parentGrand.valeur,
+
+//         // On fige l'état d'ancrage exact au moment de la création :
+//         ancrePetitCote: p1.cote,
+//         longueurQueuePetitOrigine: parentPetit.longueurQueue,
+        
+//         ancreGrandCote: p2.cote,
+//         longueurQueueGrandOrigine: parentGrand.longueurQueue,
+
+//         departPetit: p1,
+//         departGrand: p2,
+//         pointPivotQ: pointQ,
+//         jointJ: pointJ,
+//         segments: segments
+//     };
+// }
+
 export function calculerCheminEtJoint(parentPetit, parentGrand) {
     // 1. Récupération des ancres
     const ancresPetit = obtenirAncresDisponibles(parentPetit);
@@ -91,10 +136,10 @@ export function calculerCheminEtJoint(parentPetit, parentGrand) {
     // 3. Calcul du pivot Q
     const pointQ = calculerPointPivotQ(p1, p2);
 
-    // 3 bis. Calcul du point Z (extension extérieure)
+    // --- AJOUT : Calcul du point Z et du segment rose ---
     const pointZ = calculerPointZ(p1, p2, pointQ);
 
-    // 4. Définition des segments (jaune + bleu + le segment rose Q -> Z)
+    // 4. Définition des segments (on récupère les segments de base, puis on pousse le rose)
     const segments = creerSegments(p1, p2, pointQ);
     segments.push({ debut: pointQ, fin: pointZ, couleur: 'rose' });
 
@@ -118,8 +163,9 @@ export function calculerCheminEtJoint(parentPetit, parentGrand) {
         departPetit: p1,
         departGrand: p2,
         pointPivotQ: pointQ,
-        pointZ: pointZ,
+        pointZ: pointZ, // Optionnel mais pratique si tu veux stocker Z dans le retour
         jointJ: pointJ,
         segments: segments
     };
 }
+
