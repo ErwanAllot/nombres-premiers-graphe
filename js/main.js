@@ -9,6 +9,8 @@ import { initialiserBoutons } from './interactions/btn.js';
 import './sequence.js'; // Charge ton scénario
 
 
+initialiserBoutons(); // Appelle la fonction importée
+
 // ==========================================
 // GESTION DE L'INTERFACE ET DE L'HISTORIQUE
 // ==========================================
