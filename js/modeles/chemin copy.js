@@ -2,14 +2,14 @@ import { obtenirAncresDisponibles } from '@/modeles/epingle.js';
 import { calculerCheminOrthogonal, marquerObstaclesSurGrille } from '../mathematiques/pathfinder.js';
 
 // 1. Tu rassembles toutes les épingles et chemins déjà existants dans ton application
-// const tousLesEpingles = [epingle3, epingle5]; // etc.
-// const tousLescheminsExistants = [chemin3_5];  // le chemin déjà tracé
+const tousLesEpingles = [epingle3, epingle5]; // etc.
+const tousLescheminsExistants = [chemin3_5];  // le chemin déjà tracé
 
 // 2. Tu génères la carte des obstacles
-// const obstacles = marquerObstaclesSurGrille(tousLesEpingles, tousLescheminsExistants);
+const obstacles = marquerObstaclesSurGrille(tousLesEpingles, tousLescheminsExistants);
 
-// // 3. Tu calcules le nouveau chemin en lui interdisant de marcher sur les obstacles
-// const pointsChemin3_7 = calculerCheminOrthogonal(ancre3, ancre7, obstacles);
+// 3. Tu calcules le nouveau chemin en lui interdisant de marcher sur les obstacles
+const pointsChemin3_7 = calculerCheminOrthogonal(ancre3, ancre7, obstacles);
 
 // ==========================================
 // MODULE MODÈLE : CHEMIN & JOINT J
@@ -140,64 +140,7 @@ export function creerSegments(p1, p2, pointQ) {
 // }
 
 
-// export function calculerCheminEtJoint(parentPetit, parentGrand) {
-//     // 1. Récupération des ancres
-//     const ancresPetit = obtenirAncresDisponibles(parentPetit);
-//     const ancresGrand = obtenirAncresDisponibles(parentGrand);
-
-//     // 2. Sélection de la paire la plus proche
-//     const meilleurePaire = trouverMeilleurePaireAncres(ancresPetit, ancresGrand);
-//     const p1 = meilleurePaire.pPetit; 
-//     const p2 = meilleurePaire.pGrand; 
-
-//     // 3. Calcul du pivot Q (si tu en as encore besoin pour l'orientation de Z)
-//     const pointQ = calculerPointPivotQ(p1, p2);
-
-//     // 3 bis. Calcul du point Z
-//     const pointZ = calculerPointZ(p1, p2, pointQ, parentPetit, parentGrand);
-
-//     // 4. Utilisation du Pathfinder pour générer les segments entre p1 et p2 !
-//     // (Ici on appelle ton pathfinder au lieu de creerSegments à l'ancienne)
-//     const pointsChemin = calculerCheminOrthogonal(p1, p2);
-    
-//     // Tu peux transformer tes points en segments pour ton rendu existant :
-//     const segments = [];
-//     for (let i = 0; i < pointsChemin.length - 1; i++) {
-//         segments.push({
-//             debut: pointsChemin[i],
-//             fin: pointsChemin[i+1],
-//             couleur: (i < pointsChemin.length / 2) ? 'jaune' : 'bleu' // juste pour l'exemple de couleur
-//         });
-//     }
-    
-//     // On rajoute le segment rose Q -> Z
-//     segments.push({ debut: pointQ, fin: pointZ, couleur: 'rose' });
-
-//     // 5. Calcul du Joint J
-//     const pointJ = {
-//         x: (p1.x + p2.x) / 2,
-//         y: (p1.y + p2.y) / 2
-//     };
-
-//     return {
-//         parentPetitId: parentPetit.valeur,
-//         parentGrandId: parentGrand.valeur,
-//         ancrePetitCote: p1.cote,
-//         longueurQueuePetitOrigine: parentPetit.longueurQueue,
-//         ancreGrandCote: p2.cote,
-//         longueurQueueGrandOrigine: parentGrand.longueurQueue,
-//         departPetit: p1,
-//         departGrand: p2,
-//         pointPivotQ: pointQ,
-//         pointZ: pointZ,
-//         jointJ: pointJ,
-//         segments: segments
-//     };
-// }
-
-
-// Tu ajoutes obstaclesSet = new Set() en paramètre
-export function calculerCheminEtJoint(parentPetit, parentGrand, obstaclesSet = new Set()) {
+export function calculerCheminEtJoint(parentPetit, parentGrand) {
     // 1. Récupération des ancres
     const ancresPetit = obtenirAncresDisponibles(parentPetit);
     const ancresGrand = obtenirAncresDisponibles(parentGrand);
@@ -207,22 +150,30 @@ export function calculerCheminEtJoint(parentPetit, parentGrand, obstaclesSet = n
     const p1 = meilleurePaire.pPetit; 
     const p2 = meilleurePaire.pGrand; 
 
+    // 3. Calcul du pivot Q (si tu en as encore besoin pour l'orientation de Z)
     const pointQ = calculerPointPivotQ(p1, p2);
+
+    // 3 bis. Calcul du point Z
     const pointZ = calculerPointZ(p1, p2, pointQ, parentPetit, parentGrand);
 
-    // 3. ON PASSE LES OBSTACLES AU PATHFINDER ICI 👇
-    const pointsChemin = calculerCheminOrthogonal(p1, p2, obstaclesSet);
+    // 4. Utilisation du Pathfinder pour générer les segments entre p1 et p2 !
+    // (Ici on appelle ton pathfinder au lieu de creerSegments à l'ancienne)
+    const pointsChemin = calculerCheminOrthogonal(p1, p2);
     
+    // Tu peux transformer tes points en segments pour ton rendu existant :
     const segments = [];
     for (let i = 0; i < pointsChemin.length - 1; i++) {
         segments.push({
             debut: pointsChemin[i],
             fin: pointsChemin[i+1],
-            couleur: 'jaune'
+            couleur: (i < pointsChemin.length / 2) ? 'jaune' : 'bleu' // juste pour l'exemple de couleur
         });
     }
+    
+    // On rajoute le segment rose Q -> Z
     segments.push({ debut: pointQ, fin: pointZ, couleur: 'rose' });
 
+    // 5. Calcul du Joint J
     const pointJ = {
         x: (p1.x + p2.x) / 2,
         y: (p1.y + p2.y) / 2
@@ -231,6 +182,10 @@ export function calculerCheminEtJoint(parentPetit, parentGrand, obstaclesSet = n
     return {
         parentPetitId: parentPetit.valeur,
         parentGrandId: parentGrand.valeur,
+        ancrePetitCote: p1.cote,
+        longueurQueuePetitOrigine: parentPetit.longueurQueue,
+        ancreGrandCote: p2.cote,
+        longueurQueueGrandOrigine: parentGrand.longueurQueue,
         departPetit: p1,
         departGrand: p2,
         pointPivotQ: pointQ,
@@ -239,6 +194,7 @@ export function calculerCheminEtJoint(parentPetit, parentGrand, obstaclesSet = n
         segments: segments
     };
 }
+
 
 
 // // 1. On récupère les épingles 3 et 5

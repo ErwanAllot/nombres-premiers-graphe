@@ -14,38 +14,32 @@ export function calculerCheminOrthogonal(ancreSource, ancreCible, obstaclesSet =
     
     chemin.push({ x, y });
 
-    // Sécurité anti-boucle infinie (max 1000 itérations par direction)
-    let securite = 0;
-
-    // Étape 1 : Avancer en X vers la cible
-    while (x !== ancreCible.x && securite < 1000) {
-        securite++;
+    // Étape 1 : Avancer en X vers la cible, mais en contournant si bloqué
+    while (x !== ancreCible.x) {
         let pasX = (ancreCible.x > x) ? 1 : -1;
         let prochaineCase = { x: x + pasX, y: y };
 
         if (obstaclesSet.has(`${prochaineCase.x},${prochaineCase.y}`)) {
-            // Obstacle ! On fait un pas de côté en Y ET on force l'avancée en X
+            // Obstacle en X ! On essaie de faire un pas de côté en Y pour l'éviter
             let pasY = (ancreCible.y >= y) ? 1 : -1;
             let caseDeSecours = { x: x, y: y + pasY };
             
             if (!obstaclesSet.has(`${caseDeSecours.x},${caseDeSecours.y}`)) {
                 y += pasY;
                 chemin.push({ x, y });
+            } else {
+                // Si c'est bloqué partout, on avance quand même pour l'instant
+                x += pasX;
+                chemin.push({ x, y });
             }
-            // On avance quand même en X pour ne pas bloquer la boucle
-            x += pasX;
-            chemin.push({ x, y });
         } else {
             x += pasX;
             chemin.push({ x, y });
         }
     }
 
-    securite = 0;
-
-    // Étape 2 : Avancer en Y vers la cible
-    while (y !== ancreCible.y && securite < 1000) {
-        securite++;
+    // Étape 2 : Avancer en Y vers la cible, avec la même prudence
+    while (y !== ancreCible.y) {
         let pasY = (ancreCible.y > y) ? 1 : -1;
         let prochaineCase = { x: x, y: y + pasY };
 
@@ -56,9 +50,10 @@ export function calculerCheminOrthogonal(ancreSource, ancreCible, obstaclesSet =
             if (!obstaclesSet.has(`${caseDeSecours.x},${caseDeSecours.y}`)) {
                 x += pasX;
                 chemin.push({ x, y });
+            } else {
+                y += pasY;
+                chemin.push({ x, y });
             }
-            y += pasY;
-            chemin.push({ x, y });
         } else {
             y += pasY;
             chemin.push({ x, y });
@@ -67,6 +62,7 @@ export function calculerCheminOrthogonal(ancreSource, ancreCible, obstaclesSet =
 
     return chemin;
 }
+
 /**
  * Exemple de structure pour enregistrer les cases occupées 
  * par les épingles et chemins existants (la grille d'occupation).

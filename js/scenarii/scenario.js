@@ -1,12 +1,57 @@
 import { obtenirAncresDisponibles, creerEpingle } from '@/modeles/epingle.js';
 import { calculerCheminEtJoint, creerSegments, calculerPointPivotQ } from '@/modeles/chemin.js';
+import { marquerObstaclesSurGrille } from '../mathematiques/pathfinder.js';
 
 // --- RACCOURCIS MÉTIER POUR LE SCÉNARIO ---
 const ep = (epingles, val) => epingles.find(e => e.valeur === val);
 
-export const ajouterCheminEntre = (epingles, chemins, v1, v2) => {
-    chemins.push(calculerCheminEtJoint(ep(epingles, v1), ep(epingles, v2)));
-};
+// export const ajouterCheminEntre = (epingles, chemins, v1, v2) => {
+//     chemins.push(calculerCheminEtJoint(ep(epingles, v1), ep(epingles, v2)));
+// };
+
+// export function ajouterCheminEntre(epingles, chemins, valeurSource, valeurCible) {
+//     // 1. On retrouve les vrais objets épingles grâce à leur valeur
+//     const parentPetit = trouverEpingleParValeur(epingles, Math.min(valeurSource, valeurCible));
+//     const parentGrand = trouverEpingleParValeur(epingles, Math.max(valeurSource, valeurCible));
+
+//     // 2. On fabrique la carte des obstacles avec TOUT ce qui existe déjà sur la map
+//     const obstaclesActuels = marquerObstaclesSurGrille(epingles, chemins);
+
+//     // 3. On calcule le chemin et le joint en lui passant les obstacles !
+//     const nouveauChemin = calculerCheminEtJoint(parentPetit, parentGrand, obstaclesActuels);
+
+//     // 4. On l'ajoute au tableau global des chemins
+//     chemins.push(nouveauChemin);
+// }
+
+// export function ajouterCheminEntre(epingles, chemins, valeurSource, valeurCible) {
+//     // 1. On retrouve les vrais objets épingles grâce au raccourci 'ep'
+//     const parentPetit = ep(epingles, Math.min(valeurSource, valeurCible));
+//     const parentGrand = ep(epingles, Math.max(valeurSource, valeurCible));
+
+//     // 2. On fabrique la carte des obstacles avec TOUT ce qui existe déjà sur la map
+//     const obstaclesActuels = marquerObstaclesSurGrille(epingles, chemins);
+
+//     // 3. On calcule le chemin et le joint en lui passant les obstacles !
+//     const nouveauChemin = calculerCheminEtJoint(parentPetit, parentGrand, obstaclesActuels);
+
+//     // 4. On l'ajoute au tableau global des chemins
+//     chemins.push(nouveauChemin);
+// }
+
+export function ajouterCheminEntre(epingles, chemins, valeurSource, valeurCible) {
+    const parentPetit = ep(epingles, Math.min(valeurSource, valeurCible));
+    const parentGrand = ep(epingles, Math.max(valeurSource, valeurCible));
+
+    const obstaclesActuels = marquerObstaclesSurGrille(epingles, chemins);
+    
+    // 🔍 AJOUTE CE LOG POUR VOIR CE QUE LE PATHFINDER VOIT COMME OBSTACLES
+    console.log("Obstacles détectés pour le chemin entre", valeurSource, "et", valeurCible, ":", obstaclesActuels);
+
+    const nouveauChemin = calculerCheminEtJoint(parentPetit, parentGrand, obstaclesActuels);
+    chemins.push(nouveauChemin);
+}
+
 
 
 export const rallongerDeuxQueues = (epingles) => {

@@ -8,6 +8,11 @@ import {
 } from '@/scenarii/scenario.js';
 import { etape } from '@/scenarii/historique.js';
 
+import { marquerObstaclesSurGrille } from '../mathematiques/pathfinder.js';
+import { calculerCheminEtJoint } from '../modeles/chemin.js';
+
+
+
 
 // ==========================================
 // SCÉNARIO - LISTE DES ÉTAPES (Ultra-court)
@@ -21,6 +26,27 @@ let listeEpinglesInitiales = [
 
 // ÉTAPE 1 : État de départ pur
 window.historiqueApp.enregistrerEtape("État de départ (3 et 5)", [...listeEpinglesInitiales], []);
+
+
+
+// // --- ÉTAPE 1 : Le premier chemin (3 et 5) ---
+// const chemin3_5 = calculerCheminEtJoint(epingle3, epingle5); // Pas d'obstacle au début
+
+// // --- ÉTAPE 2 : Le chemin suivant (3 et 7) ---
+// // 1. On liste ce qui existe déjà sur la map
+// const epinglesExistantes = [epingle3, epingle5, epingle7];
+// const cheminsExistants = [chemin3_5];
+
+// // 2. On fabrique la carte des obstacles
+// const obstaclesActuels = marquerObstaclesSurGrille(epinglesExistantes, cheminsExistants);
+
+// // 3. On calcule le nouveau chemin en lui interdisant d'écraser les obstacles !
+// const chemin3_7 = calculerCheminEtJoint(epingle3, epingle7, obstaclesActuels);
+
+
+
+
+
 
 // ÉTAPE 2 : Premier chemin
 etape("Tracé du premier chemin vers J", (epingles, chemins, options) => {
