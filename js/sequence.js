@@ -6,7 +6,7 @@ import {
     insererLigne, 
     recalculerCheminFidele 
 } from './scenario.js';
-
+import { etape } from './historique.js';
 
 
 // ==========================================

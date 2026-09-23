@@ -1,7 +1,7 @@
 // ==========================================
 // ASSISTANT DE SCÉNARIO (Générique)
 // ==========================================
-function etape(nom, callback) {
+export function etape(nom, callback) {
     let etat = window.historiqueApp.obtenirEtatActuel();
     let epingles = etat ? JSON.parse(JSON.stringify(etat.epingles)) : [];
     let chemins = etat ? JSON.parse(JSON.stringify(etat.chemins)) : [];
@@ -30,8 +30,8 @@ window.historiqueApp = {
             description: description,
             epingles: JSON.parse(JSON.stringify(epingles)),
             chemins: JSON.parse(JSON.stringify(chemins)),
-            ligneInseree: options.ligneInseree,       // <--- On sauvegarde
-            colonneInseree: options.colonneInseree,   // <--- On sauvegarde
+            ligneInseree: options.ligneInseree,       
+            colonneInseree: options.colonneInseree,   
             nombrePremier: options.nombrePremier
         };
 
@@ -63,7 +63,6 @@ window.historiqueApp = {
         return null;
     },
 
-    // --- NOUVEAUTÉS POUR DÉBUT ET FIN ---
     allerAuDebut() {
         if (this.etapes.length > 0 && this.indexActuel > 0) {
             this.indexActuel = 0;
@@ -81,7 +80,6 @@ window.historiqueApp = {
         }
         return null;
     },
-    // -------------------------------------
 
     obtenirEtatActuel() {
         if (this.indexActuel >= 0 && this.indexActuel < this.etapes.length) {
