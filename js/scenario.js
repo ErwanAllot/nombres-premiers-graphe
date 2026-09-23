@@ -92,39 +92,6 @@ const recalculerTousLesChemins = (epingles, chemins) => {
 };
 
 
-// const recalculerCheminFidele = (chemin, epingles) => {
-//     const pPetit = ep(epingles, chemin.parentPetitId);
-//     const pGrand = ep(epingles, chemin.parentGrandId);
-//     if (!pPetit || !pGrand) {
-//         console.warn("⚠️ Parents introuvables pour le chemin :", chemin);
-//         return null;
-//     }
-
-//     console.log(`--- Recalcul pour chemin (parents ${chemin.parentPetitId} et ${chemin.parentGrandId}) ---`);
-//     console.log(`Ancre attendue -> Petit ID: ${chemin.ancrePetitId}, Grand ID: ${chemin.ancreGrandId}`);
-//     // 1. On récupère toutes les ancres actuelles des parents (avec leurs nouvelles positions / longueurs de queue)
-//     const ancresPetit = sbtenirAncresDisponibles(pPetit);
-//     const ancresGrand = sbtenirAncresDisponibles(pGrand);
-
-//     // 2. On cherche précisément l'ancre qui a le même ID qu'au premier jour !
-//     const p1 = ancresPetit.find(a => a.id === chemin.ancrePetitId) || ancresPetit[0];
-//     const p2 = ancresGrand.find(a => a.id === chemin.ancreGrandId) || ancresGrand[0];
-
-//     // 3. On recalcule le pivot Q et les segments avec ces ancres fixes
-//     const pointQ = calculerPointPivotQ(p1, p2);
-//     const segments = creerSegments(p1, p2, pointQ);
-//     const pointJ = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
-
-//     return {
-//         ...chemin, // Conserve les ID et les ancres stockées
-//         departPetit: p1,
-//         departGrand: p2,
-//         pointPivotQ: pointQ,
-//         jointJ: pointJ,
-//         segments: segments
-//     };
-// };
-
 const recalculerCheminFidele = (chemin, epingles) => {
     const pPetit = ep(epingles, chemin.parentPetitId);
     const pGrand = ep(epingles, chemin.parentGrandId);
@@ -270,22 +237,6 @@ etape("Allongement 7 et 11", (epingles) => {
 });
 
 
-
-// --- LE SCÉNARIO (Ultra court et lisible) ---
-
-// etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
-//     const indexCible = 2; // Mets la vraie valeur ici (ex: 2 au lieu de -10)
-
-//     // 1. On décale les épingles
-//     insererLigne(epingles, indexCible);
-    
-//     // 2. On recalcule tous les chemins proprement
-//     recalculerTousLesChemins(epingles, chemins);
-    
-//     // 3. On active le rendu visuel
-//     options.ligneInseree = indexCible;
-// });
-
 etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
     const indexCible = 1;
 
@@ -307,8 +258,6 @@ etape("Insertion d'une ligne en y=2", (epingles, chemins, options) => {
 });
 
 
-
-
 // ÉTAPE 17 : Chemin (5, 17)
 etape("Chemin (5, 17)", (epingles, chemins, options) => {
     ajouterCheminEntre(epingles, chemins, 5, 17);
@@ -322,6 +271,4 @@ etape("Épingle 23 (Rouge)", (epingles) => {
 etape("Allongement 5 et 17", (epingles) => {
     rallongerDeuxQueues(epingles);
 });
-
-
 
