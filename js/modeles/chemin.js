@@ -45,52 +45,7 @@ export function calculerPointPivotQ(p1, p2) {
     }
 }
 
-/**
- * Calcule un point Z prolongeant Q vers l'extérieur pour préparer la future épingle 7.
- */
-// export function calculerPointZ(p1, p2, pointQ) {
-//     const midX = (p1.x + p2.x) / 2;
-//     const midY = (p1.y + p2.y) / 2;
 
-//     const dirX = pointQ.x - midX;
-//     const dirY = pointQ.y - midY;
-
-//     return {
-//         x: pointQ.x + dirX,
-//         y: pointQ.y + dirY
-//     };
-// }
-
-// export function calculerPointZ(p1, p2, pointQ) {
-//     // 1. Le centre du segment entre les deux épingles parentes
-//     const midX = (p1.x + p2.x) / 2;
-//     const midY = (p1.y + p2.y) / 2;
-
-//     // 2. Le vecteur allant du centre vers Q
-//     const dirX = pointQ.x - midX;
-//     const dirY = pointQ.y - midY;
-
-//     // Si par hasard Q est exactement au milieu (cas d'alignement pur),
-//     // on force une direction par défaut vers l'extérieur pour ne pas rester bloqué.
-//     if (dirX === 0 && dirY === 0) {
-//         return {
-//             x: pointQ.x + (p2.y - p1.y), // Décalage orthogonal
-//             y: pointQ.y - (p2.x - p1.x)
-//         };
-//     }
-
-//     // 3. On positionne Z en poussant Q *plus loin* dans la même direction 
-//     // (par exemple, en multipliant l'écart par 1.5 ou 2 pour qu'il aille au-delà de Q)
-//     return {
-//         x: Math.round(midX + dirX * 1.8),
-//         y: Math.round(midY + dirY * 1.8)
-//     };
-// }
-
-/**
- * Calcule un point Z prolongeant Q vers l'extérieur, 
- * orienté depuis le centre des épingles parentes vers Q.
- */
 export function calculerPointZ(p1, p2, pointQ, parentPetit, parentGrand) {
     // 1. Centre exact entre les têtes des deux épingles parentes
     const centerX = (parentPetit.x + parentGrand.x) / 2;
@@ -136,19 +91,13 @@ export function calculerCheminEtJoint(parentPetit, parentGrand) {
     const p1 = meilleurePaire.pPetit; 
     const p2 = meilleurePaire.pGrand; 
 
-    // // 3. Calcul du pivot Q
-    // const pointQ = calculerPointPivotQ(p1, p2);
-
-    // // 3 bis. Calcul du point Z (extension extérieure)
-    // const pointZ = calculerPointZ(p1, p2, pointQ);
-
     // 3. Calcul du pivot Q
     const pointQ = calculerPointPivotQ(p1, p2);
 
     // 3 bis. Calcul du point Z (en lui passant bien les parents)
     const pointZ = calculerPointZ(p1, p2, pointQ, parentPetit, parentGrand);
 
-    
+
     // 4. Définition des segments (jaune + bleu + le segment rose Q -> Z)
     const segments = creerSegments(p1, p2, pointQ);
     segments.push({ debut: pointQ, fin: pointZ, couleur: 'rose' });
