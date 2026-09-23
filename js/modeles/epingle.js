@@ -5,7 +5,7 @@
  * @param {number} y - Coordonnée logique Y du corps
  * @param {string} couleurType - 'violet', 'rouge' ou 'vert'
  */
-function creerEpingle(valeur, x, y, couleurType = 'violet', longueurQueue = 1) {
+export function creerEpingle(valeur, x, y, couleurType = 'violet', longueurQueue = 1) {
     const orientation = calculerOrientation(x, y);
 
     return {

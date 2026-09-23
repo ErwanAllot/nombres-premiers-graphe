@@ -1,12 +1,14 @@
+import { creerEpingle } from './modeles/epingle.js';
+
 // --- RACCOURCIS MÉTIER POUR LE SCÉNARIO ---
 const ep = (epingles, val) => epingles.find(e => e.valeur === val);
 
-const ajouterCheminEntre = (epingles, chemins, v1, v2) => {
+export const ajouterCheminEntre = (epingles, chemins, v1, v2) => {
     chemins.push(calculerCheminEtJoint(ep(epingles, v1), ep(epingles, v2)));
 };
 
 
-const rallongerDeuxQueues = (epingles) => {
+export const rallongerDeuxQueues = (epingles) => {
     const etatPrecedent = window.historiqueApp.obtenirEtatActuel();
     if (!etatPrecedent) return;
 
@@ -21,7 +23,7 @@ const rallongerDeuxQueues = (epingles) => {
 
     allongerQueues(epingles, idPetit, idGrand);
 };
-const allongerQueues = (epingles, ...valeurs) => {
+export const allongerQueues = (epingles, ...valeurs) => {
     valeurs.forEach(v => {
         const p = ep(epingles, v);
         if (p) p.longueurQueue += 1;
@@ -30,7 +32,7 @@ const allongerQueues = (epingles, ...valeurs) => {
 
 
 
-const genererEpingleSuivante = (epingles) => {
+export const genererEpingleSuivante = (epingles) => {
     const etatPrecedent = window.historiqueApp.obtenirEtatActuel();
     if (!etatPrecedent) return;
 
@@ -62,7 +64,7 @@ const nouvelleEpingle = (epingles, val, x, y, couleur = 'rouge') => {
 // --- LES OUTILS ---
 
 // 1. Outil pour insérer une ligne et décaler les épingles situées en dessous
-const insererLigne = (epingles, indexLigne) => {
+export const insererLigne = (epingles, indexLigne) => {
     const cible = Number(indexLigne);
     epingles.forEach(p => {
         const currentY = Number(p.y);
@@ -73,7 +75,7 @@ const insererLigne = (epingles, indexLigne) => {
 };
 
 // 2. Outil pour recalculer tous les chemins de la grille d'un coup
-const recalculerTousLesChemins = (epingles, chemins) => {
+export const recalculerTousLesChemins = (epingles, chemins) => {
     chemins.forEach((c) => {
         const pPetit = ep(epingles, c.parentPetitId);
         const pGrand = ep(epingles, c.parentGrandId);
@@ -92,7 +94,7 @@ const recalculerTousLesChemins = (epingles, chemins) => {
 };
 
 
-const recalculerCheminFidele = (chemin, epingles) => {
+export const recalculerCheminFidele = (chemin, epingles) => {
     const pPetit = ep(epingles, chemin.parentPetitId);
     const pGrand = ep(epingles, chemin.parentGrandId);
     if (!pPetit || !pGrand) {

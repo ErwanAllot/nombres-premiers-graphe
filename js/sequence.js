@@ -1,3 +1,12 @@
+import { creerEpingle } from './modeles/epingle.js';
+import { 
+    ajouterCheminEntre, 
+    rallongerDeuxQueues, 
+    genererEpingleSuivante, 
+    insererLigne, 
+    recalculerCheminFidele 
+} from './scenario.js';
+
 
 
 // ==========================================

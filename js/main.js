@@ -6,6 +6,7 @@ import { dessinerChemin } from './rendu/chemin.js';
 import { dessinerEpingle } from './rendu/epingle.js';
 import { etatGrille, initialiserCanvasEtInteractions } from './interactions/souris.js';
 
+import './sequence.js';
 
 
 // ==========================================
