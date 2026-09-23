@@ -7,261 +7,6 @@ const ep = (epingles, val) => epingles.find(e => e.valeur === val);
 import { calculerCheminOrthogonal } from '@/mathematiques/pathfinder.js'; // Ajuste le chemin relatif si besoin (ex: '../mathematiques/pathfinder.js')
 
 
-// export function ajouterCheminEntre(epingles, chemins, valeurSource, valeurCible) {
-//     const parentPetit = ep(epingles, Math.min(valeurSource, valeurCible));
-//     const parentGrand = ep(epingles, Math.max(valeurSource, valeurCible));
-
-//     const obstaclesActuels = marquerObstaclesSurGrille(epingles, chemins);
-    
-//     // 🔍 AJOUTE CE LOG POUR VOIR CE QUE LE PATHFINDER VOIT COMME OBSTACLES
-//     console.log("Obstacles détectés pour le chemin entre", valeurSource, "et", valeurCible, ":", obstaclesActuels);
-
-//     const nouveauChemin = calculerCheminEtJoint(parentPetit, parentGrand, obstaclesActuels);
-//     chemins.push(nouveauChemin);
-// }
-
-
-
-// export function ajouterCheminEntre(epingles, chemins, valeurSource, valeurCible, options = {}) {
-//     const parentPetit = ep(epingles, Math.min(valeurSource, valeurCible));
-//     const parentGrand = ep(epingles, Math.max(valeurSource, valeurCible));
-
-//     const obstaclesActuels = marquerObstaclesSurGrille(epingles, chemins);
-    
-//     // 1. On calcule le chemin principal (jaune + rose Q->Z) et son point M
-//     const nouveauChemin = calculerCheminEtJoint(parentPetit, parentGrand, obstaclesActuels);
-
-//     // 2. Si une distance (nombre premier) est fournie, on calcule automatiquement le chemin vert vers S depuis M !
-//     if (options.nombrePremier && nouveauChemin.pointM) {
-//         const pointS = calculerPointS(nouveauChemin.pointM, options.nombrePremier, obstaclesActuels);
-//         const pointsCheminMS = calculerCheminOrthogonal(nouveauChemin.pointM, pointS, obstaclesActuels);
-
-//         const segmentsVerts = [];
-//         for (let i = 0; i < pointsCheminMS.length - 1; i++) {
-//             segmentsVerts.push({
-//                 debut: pointsCheminMS[i],
-//                 fin: pointsCheminMS[i+1],
-//                 couleur: 'vert'
-//             });
-//         }
-
-//         // On injecte les segments verts et le point S dans l'objet chemin
-//         nouveauChemin.segments.push(...segmentsVerts);
-//         nouveauChemin.pointS = pointS;
-//     }
-
-//     chemins.push(nouveauChemin);
-// }
-
-// export function calculerCheminEscalier(pointM, pointS, obstaclesSet = new Set()) {
-//     let points = [{ x: pointM.x, y: pointM.y }];
-//     let cx = pointM.x;
-//     let cy = pointM.y;
-
-//     const targetX = pointS.x;
-//     const targetY = pointS.y;
-
-//     const stepX = targetX > cx ? 1 : (targetX < cx ? -1 : 0);
-//     const stepY = targetY > cy ? 1 : (targetY < cy ? -1 : 0);
-
-//     let moveX = true; // Alternance : commence par X, puis Y, puis X...
-
-//     while (cx !== targetX || cy !== targetY) {
-//         let advanced = false;
-
-//         if (moveX && cx !== targetX) {
-//             let nextX = cx + stepX;
-//             // On vérifie si la case est libre
-//             if (!obstaclesSet.has(`${nextX},${cy}`) || nextX === targetX) {
-//                 cx = nextX;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//             }
-//             moveX = false; // On bascule sur Y pour le prochain tour
-//         } else if (!moveX && cy !== targetY) {
-//             let nextY = cy + stepY;
-//             // On vérifie si la case est libre
-//             if (!obstaclesSet.has(`${cx},${nextY}`) || nextY === targetY) {
-//                 cy = nextY;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//             }
-//             moveX = true; // On bascule sur X pour le prochain tour
-//         } else {
-//             // Si la direction prioritaire est bloquée, on essaie l'autre
-//             if (cx !== targetX) {
-//                 cx += stepX;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//             } else if (cy !== targetY) {
-//                 cy += stepY;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//             }
-//         }
-
-//         if (!advanced) break; // Sécurité anti-boucle infinie
-//     }
-
-//     return points;
-// }
-
-// export function calculerCheminEscalier(pointM, pointS, obstaclesSet = new Set()) {
-//     let points = [{ x: pointM.x, y: pointM.y }];
-//     let cx = pointM.x;
-//     let cy = pointM.y;
-
-//     const targetX = pointS.x;
-//     const targetY = pointS.y;
-
-//     const stepX = targetX > cx ? 1 : (targetX < cx ? -1 : 0);
-//     const stepY = targetY > cy ? 1 : (targetY < cy ? -1 : 0);
-
-//     let moveX = true;
-
-//     // Pour le tout premier mouvement, si M est aligné horizontalement ou verticalement 
-//     // avec le début du tracé, on force l'axe perpendiculaire pour ne pas mordre.
-//     // (Par exemple, si on peut bouger en Y en premier, on commence par Y).
-//     if (Math.abs(targetY - cy) > 0 && Math.abs(targetX - cx) > 0) {
-//         // On regarde si on peut alterner intelligemment
-//         moveX = Math.abs(targetX - cx) >= Math.abs(targetY - cy);
-//     }
-
-//     let iterations = 0;
-//     const maxIterations = 100; // Sécurité anti-boucle infinie
-
-//     while ((cx !== targetX || cy !== targetY) && iterations < maxIterations) {
-//         iterations++;
-//         let advanced = false;
-
-//         if (moveX && cx !== targetX) {
-//             let nextX = cx + stepX;
-//             // On vérifie si la case est libre (et on évite de s'empaler sur le point M lui-même de manière redondante)
-//             if (!obstaclesSet.has(`${nextX},${cy}`) || nextX === targetX) {
-//                 cx = nextX;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//             }
-//             moveX = false; 
-//         } else if (!moveX && cy !== targetY) {
-//             let nextY = cy + stepY;
-//             if (!obstaclesSet.has(`${cx},${nextY}`) || nextY === targetY) {
-//                 cy = nextY;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//             }
-//             moveX = true; 
-//         } else {
-//             // Plan de secours si une direction est bloquée
-//             if (cx !== targetX) {
-//                 cx += stepX;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//                 moveX = false;
-//             } else if (cy !== targetY) {
-//                 cy += stepY;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//                 moveX = true;
-//             }
-//         }
-
-//         if (!advanced) {
-//             // Si vraiment bloqué, on force un pas orthogonal pour se dégager
-//             if (cx !== targetX) {
-//                 cx += stepX;
-//                 points.push({ x: cx, y: cy });
-//             } else if (cy !== targetY) {
-//                 cy += stepY;
-//                 points.push({ x: cx, y: cy });
-//             } else {
-//                 break;
-//             }
-//         }
-//     }
-
-//     return points;
-// }
-
-// export function calculerCheminEscalier(pointM, pointS, obstaclesSet = new Set()) {
-//     let points = [{ x: pointM.x, y: pointM.y }];
-//     let cx = pointM.x;
-//     let cy = pointM.y;
-
-//     const targetX = pointS.x;
-//     const targetY = pointS.y;
-
-//     const stepX = targetX > cx ? 1 : (targetX < cx ? -1 : 0);
-//     const stepY = targetY > cy ? 1 : (targetY < cy ? -1 : 0);
-
-//     // --- FORCER LE DÉPART EN SOUHAIT ---
-//     // Si M est sur un segment, on regarde par où aller en premier.
-//     // Pour éviter de mordre, on force le premier mouvement sur l'axe Y 
-//     // (ou X selon le besoin) pour quitter immédiatement la ligne d'origine.
-//     let moveX = false; // On commence par Y pour casser l'alignement horizontal (ou inversement)
-    
-//     // Si la distance en X est plus grande et qu'on veut alterner, 
-//     // on s'assure que le premier pas ne va pas dans la direction du segment parent.
-//     if (Math.abs(targetX - cx) > Math.abs(targetY - cy)) {
-//         moveX = false; // Commence par vertical si le parent était horizontal
-//     } else {
-//         moveX = true;  // Commence par horizontal si le parent était vertical
-//     }
-
-//     let iterations = 0;
-//     const maxIterations = 100;
-
-//     while ((cx !== targetX || cy !== targetY) && iterations < maxIterations) {
-//         iterations++;
-//         let advanced = false;
-
-//         if (moveX && cx !== targetX) {
-//             let nextX = cx + stepX;
-//             if (!obstaclesSet.has(`${nextX},${cy}`) || nextX === targetX) {
-//                 cx = nextX;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//             }
-//             moveX = false; 
-//         } else if (!moveX && cy !== targetY) {
-//             let nextY = cy + stepY;
-//             if (!obstaclesSet.has(`${cx},${nextY}`) || nextY === targetY) {
-//                 cy = nextY;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//             }
-//             moveX = true; 
-//         } else {
-//             // Plan de secours si une direction est bloquée
-//             if (cx !== targetX) {
-//                 cx += stepX;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//                 moveX = false;
-//             } else if (cy !== targetY) {
-//                 cy += stepY;
-//                 points.push({ x: cx, y: cy });
-//                 advanced = true;
-//                 moveX = true;
-//             }
-//         }
-
-//         if (!advanced) {
-//             if (cx !== targetX) {
-//                 cx += stepX;
-//                 points.push({ x: cx, y: cy });
-//             } else if (cy !== targetY) {
-//                 cy += stepY;
-//                 points.push({ x: cx, y: cy });
-//             } else {
-//                 break;
-//             }
-//         }
-//     }
-
-//     return points;
-// }
-
 export function calculerCheminEscalier(pointM, pointS, obstaclesSet = new Set()) {
     let points = [{ x: pointM.x, y: pointM.y }];
     let cx = pointM.x;
@@ -358,9 +103,7 @@ export function ajouterCheminEntre(epingles, chemins, valeurSource, valeurCible,
         const pointS = calculerPointS(nouveauChemin.pointM, options.nombrePremier, obstaclesActuels);
         console.log("Point S calculé :", pointS);
 
-        // const pointsCheminMS = calculerCheminOrthogonal(nouveauChemin.pointM, pointS, obstaclesActuels);
-        // Au lieu de ça :
-// const pointsCheminMS = calculerCheminOrthogonal(nouveauChemin.pointM, pointS, obstaclesActuels);
+
 
 // Tu mets ça :
 const pointsCheminMS = calculerCheminEscalier(nouveauChemin.pointM, pointS, obstaclesActuels);
@@ -417,16 +160,29 @@ export const genererEpingleSuivante = (epingles) => {
     let idPetit = 0;
     let idGrand = 0;
 
+    // if (etatPrecedent.chemins && etatPrecedent.chemins.length > 0) {
+    //     const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
+        
+    //     // --- C'EST ICI QU'ON CHANGE Q PAR Z ---
+    //     x = dernierChemin.pointZ.x;
+    //     y = dernierChemin.pointZ.y;
+        
+    //     idPetit = dernierChemin.parentPetitId;
+    //     idGrand = dernierChemin.parentGrandId;
+    // }
+
     if (etatPrecedent.chemins && etatPrecedent.chemins.length > 0) {
-        const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
-        
-        // --- C'EST ICI QU'ON CHANGE Q PAR Z ---
-        x = dernierChemin.pointZ.x;
-        y = dernierChemin.pointZ.y;
-        
-        idPetit = dernierChemin.parentPetitId;
-        idGrand = dernierChemin.parentGrandId;
-    }
+    const dernierChemin = etatPrecedent.chemins[etatPrecedent.chemins.length - 1];
+    
+    // On prend pointS s'il existe (chemin vert), sinon on retombe sur pointZ (chemin classique)
+    const pointArrivee = dernierChemin.pointS || dernierChemin.pointZ;
+    
+    x = pointArrivee.x;
+    y = pointArrivee.y;
+    
+    idPetit = dernierChemin.parentPetitId;
+    idGrand = dernierChemin.parentGrandId;
+}
 
     const valPremier = etatPrecedent.nombrePremier;
     const polarite = idGrand + idPetit - valPremier;

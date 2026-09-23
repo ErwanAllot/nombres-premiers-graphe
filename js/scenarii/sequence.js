@@ -107,11 +107,22 @@ etape("Allongement des queues de 5 et 7", (epingles) => {
     rallongerDeuxQueues(epingles);
 });
 
-// ÉTAPE 11 : Chemin (5, 13)
-etape("Test unique du Chemin (5, 13)", (epingles, chemins, options) => {
-    ajouterCheminEntre(epingles, chemins, 5, 13);
-    options.nombrePremier = 17;
+
+
+
+etape("Tracé du premier chemin vers J", (epingles, chemins, options) => {
+    // 1. On définit d'abord le nombre premier pour cette étape
+    options.nombrePremier = 17; 
+    
+    // 2. Ensuite on appelle la fonction qui va bien l'utiliser
+    ajouterCheminEntre(epingles, chemins, 5, 13, options); 
 });
+
+// // ÉTAPE 11 : Chemin (5, 13)
+// etape("Test unique du Chemin (5, 13)", (epingles, chemins, options) => {
+//     ajouterCheminEntre(epingles, chemins, 5, 13);
+//     options.nombrePremier = 17;
+// });
 //ÉTAPE 12 : Épingle 17
 etape("Génération de l'épingle 17 (Rouge)", (epingles) => {
     genererEpingleSuivante(epingles);
@@ -122,11 +133,20 @@ etape("Allongement des queues de 5 et 13", (epingles) => {
 });
 
 
-// ÉTAPE 14 : Chemin (7, 11)
-etape("Chemin (7, 11)", (epingles, chemins, options) => {
-    ajouterCheminEntre(epingles, chemins, 7, 11);
-    options.nombrePremier = 19;
+
+etape("Tracé du premier chemin vers J", (epingles, chemins, options) => {
+    // 1. On définit d'abord le nombre premier pour cette étape
+    options.nombrePremier = 19; 
+    
+    // 2. Ensuite on appelle la fonction qui va bien l'utiliser
+    ajouterCheminEntre(epingles, chemins, 7, 11, options); 
 });
+
+// // ÉTAPE 14 : Chemin (7, 11)
+// etape("Chemin (7, 11)", (epingles, chemins, options) => {
+//     ajouterCheminEntre(epingles, chemins, 7, 11);
+//     options.nombrePremier = 19;
+// });
 
 
 //ÉTAPE 15 : Épingle 19
